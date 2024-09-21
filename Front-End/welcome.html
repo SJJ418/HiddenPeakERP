@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hidden Peak ERP System</title>
+    <link rel="stylesheet" href="welcome.css">
+</head>
+<body>
+    <!-- Main container for the welcome background -->
+    <div class="container">
+        <!-- Placeholder for the welcome image -->
+        <div class="welcome-image"></div>
+
+        <!-- Left Section: Registration Modal -->
+        <div id="registrationModal" class="modal registration-modal">
+            <img src="logo.png" alt="Hidden Peak Logo" class="modal-logo">
+            <div class="modal-content">
+                <h1>Welcome to</h1>
+                <h3>The Hidden Peak ERP</h3>
+                <p>Streamline your operations with our ERP solutions designed for small businesses.</p>
+                <button id="registerButton">Register Now</button>
+            </div>
+        </div>
+
+        <!-- Right Section: Login Modal -->
+        <div id="loginModal" class="modal login-modal">
+            <div class="modal-content">
+                <h2>Or login to your account</h2>
+                <form id="loginForm">
+                    <input type="text" placeholder="User ID" name="userId" required>
+                    <input type="password" placeholder="Password" name="password" required>
+                    <p class="terms">
+                        By continuing, you agree to Hidden Peak's 
+                        <span class="small-text">Conditions of Use</span> and 
+                        <span class="small-text">Privacy Notice</span>.
+                    </p>
+                    <button type="submit">Login</button>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Create Account Modal -->
+        <div id="createAccountModal" class="modal create-account-modal">
+            <div class="modal-content">
+                <h3>Create Account</h3>
+                <span class="close closeCreate">&times;</span>
+                <form id="createAccountForm">
+                    <input type="text" placeholder="User ID" name="userId" required>
+                    <input type="password" placeholder="Password" name="password" required>
+                    <select id="roleSelect" name="role" required>
+                        <option value="">Select Role</option>
+                        <option value="Vendor">Vendor</option>
+                        <option value="OpsManager">Ops Manager</option>
+                        <option value="Warehouse">Warehouse</option>
+                        <option value="Finance">Finance</option>
+                        <option value="StoreOwner">Store Owner</option>
+                        <option value="serviceStaff">Service Staff</option>
+                    </select>
+                    <div id="storeDetails" style="display:none;">
+                        <input type="text" placeholder="Store Name" name="storeName">
+                        <input type="text" placeholder="Store ID" name="storeId">
+                    </div>
+                    <button type="submit">Create Account</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Custom Alert Modal -->
+        <div id="customAlert" class="custom-alert hidden">
+            <div class="custom-alert-content">
+                <span class="custom-alert-message" id="customAlertMessage"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="welcome.js"></script>
+</body>
+</html>

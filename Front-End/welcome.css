@@ -1,0 +1,208 @@
+:root {
+    --primary-bg-color: #29313C;
+    --secondary-bg-color: #d4d7d9;
+    --highlight-color: #bca965;
+    --error-color: #ff0000;
+    --link-color: #6c75f3;
+    --font-family: Arial, sans-serif;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: var(--font-family);
+    background-color: var(--background-primary);
+    color: var(--text-color-primary);
+    overflow: hidden;
+}
+
+.container {
+    background: url('welcome.png') no-repeat center center fixed;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-logo {
+    width: 80px;
+    height: auto;
+    margin-top: 10px;
+    position: absolute;
+    top: 60px;
+    left: 70px;
+}
+
+.modal {
+    display: none;
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100vh;
+    padding: 40px;
+    box-sizing: border-box;
+    transition: transform 0.75s ease-out;
+    background-color: var(--background-secondary);
+    color: var(--text-color-secondary);
+}
+
+.registration-modal {
+    left: 0;
+    transform: translateX(-100%);
+    background-color: #29313C;
+    color: #FFF;
+}
+
+.login-modal {
+    right: 0;
+    transform: translateX(100%);
+    background-color: #d4d7d9;
+    color: #000;
+}
+
+.create-account-modal {
+    right: 0;
+    transform: translateX(-100%);
+    background-color: #d4d7d9;
+    color: #000;
+}
+
+.modal-content {
+    position: relative;
+    max-width: 400px;
+    margin: 50% auto;
+    transform: translateY(-50%);
+    width: 300px;
+    max-width: 80%;
+    text-align: left;
+}
+
+button, input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+button {
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.registration-modal button, 
+.registration-modal input, 
+.registration-modal select {
+    background-color: #FFF;
+    color: var(--primary-bg-color);
+    font-weight: bold;
+}
+
+.login-modal button, .login-modal select {
+    background-color: var(--primary-bg-color);
+    color: #FFF;
+    font-weight: bold;
+}
+
+.login-modal input {
+    background-color: #FFF;
+    color: #29313C;
+    border-color: var(--primary-bg-color);
+}
+
+.create-account-modal button, .create-account-modal select {
+    background-color: var(--primary-bg-color);
+    color: #FFF;
+}
+
+.create-account-modal input {
+    background-color: #FFF;
+    color: var(--primary-bg-color);
+    border-color: var(--primary-bg-color);
+}
+
+button:hover {
+    background-color: #bca965;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    
+}
+
+.close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: var(--primary-bg-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 30px;
+}
+
+.close:hover {
+    color: #ff0000;
+}
+
+.terms {
+    font-size: x-small;
+    color: inherit;
+}
+
+.terms .small-text {
+    font-size: x-small;
+    font-weight: bold;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.terms .small-text:hover {
+    color: #6c75f3;
+    text-decoration: underline;
+}
+
+.forgot-password {
+    color: var(--primary-bg-color);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password:hover {
+    color: #6c75f3;
+    text-decoration: underline;
+}
+
+
+.custom-alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+}
+
+.hidden {
+    display: none;
+    opacity: 0;
+}
+
+@media (max-width: 768px) {
+    .modal {
+        width: 100%;
+        padding: 20px;
+    }
+
+    button, input, select {
+        width: 80%;
+}}
