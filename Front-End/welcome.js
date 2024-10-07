@@ -73,7 +73,7 @@ class ModalManager {
         });
 
         // Send form data to the server using the fetch API
-        fetch('https://ERP-google-cloud-server-url/create-account', {
+        fetch('http://localhost:9000/createAccount', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -107,7 +107,7 @@ class ModalManager {
         });
 
         // Send login data to the server using the fetch API
-        fetch('https://ERP-google-cloud-server-url/sign-in', {
+        fetch('http://localhost:9000/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
