@@ -80,13 +80,12 @@ class ModalManager {
             },
             body: JSON.stringify(data)  // Send form data as JSON
         })
-        .then(response => response.json())  // Parse JSON response
-        .then(data => {
-            if (data.success) {
-                this.showAlert('Account created successfully!', false);  // Show success message
+        .then(response => {
+            if (response.status == 200) {
+               this.showAlert('Account created successfully!', false);  // Show success message
                 this.createAccountModal.style.display = 'none';  // Hide create account modal
                 this.createAccountForm.reset();  // Reset the form
-                this.loginModal.style.display = 'block';  // Show login modal
+                this.loginModal.style.display = 'block';  // Show login modal             
             } else {
                 this.showAlert('Error creating account: ' + data.message);  // Show error message
             }
@@ -114,10 +113,10 @@ class ModalManager {
             },
             body: JSON.stringify(data)  // Send login data as JSON
         })
-        .then(response => response.json())  // Parse JSON response
-        .then(data => {
-            if (data.success) {
-                this.redirectUser(data.role);  // Redirect the user based on their role
+       .then(response => {
+            if (response.status == 200) {
+               this.showAlert('Login successful!', false);  // Show success message
+                //this.redirectUser(data.role);  // Redirect the user based on their role
             } else {
                 this.showAlert('Error signing in: ' + data.message);  // Show error message
             }
