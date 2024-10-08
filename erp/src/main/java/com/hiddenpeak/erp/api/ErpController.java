@@ -3,9 +3,13 @@ package com.hiddenpeak.erp.api;
 
 import com.hiddenpeak.erp.ProductionManager;
 import com.hiddenpeak.erp.dal.ProductionReport;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,24 +24,32 @@ public class ErpController {
   @Autowired
   ProductionManager productionManager;
 
-@GetMapping("/test")
-public void test() {
-  System.out.println("Success!");
-}
+  List<String> createdUsers = new ArrayList<>();
 
   @PostMapping("/createAccount")
-  public void createAccount(@RequestBody String body) {
-    System.out.println("createAccount hit");
-    log.info("Got a request with body: {}", body);
+  public ResponseEntity createAccount(@RequestBody String body) {
+    log.info("Got a createAccount request with body: {}", body);
+    
+    JSONObject object = new JSONObject(body);
+    createdUsers.add(object.getString("userId"));
 
-    //productionManager.generateProductionReport(id);
+    return new ResponseEntity(HttpStatus.OK);
+
   }
 
   @PostMapping("/login")
-  public void login(@RequestBody String body) {
-    System.out.println("login hit");
+  public ResponseEntity login(@RequestBody String body) {
 
-    log.info("Got a request with body: {}", body);
+    log.info("Got a login request with body: {}", body);
+
+    JSONObject object = new JSONObject(body);
+    if (createdUsers.contains(object.getString("userId"))) {
+      log.error("User found");
+      return new ResponseEntity(HttpStatus.OK);
+    } else {
+      log.error("User not found");
+      return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @PostMapping("/submitPurchaseOrder")
