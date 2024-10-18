@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Dashboard</title>
+  <link rel="stylesheet" href="managerDashboard.css">
+  <link rel="stylesheet" href="common.css">
+  <script src="managerDashboard.js" defer></script>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="logo.png" alt="Ops Logo" class="logo-img">
+      <h2>Ops Mgr</h2>
+    </div>
+    <ul class="menu">
+      <li id="homeLink" class="active"><span>🏠</span> Home</li>
+      <li id="ordersLink"><span>📦</span> Orders</li>
+      <li id="inventoryLink"><span>📋</span> Inventory</li>
+      <li id="statisticsLink"><span>📊</span> Statistics</li>
+    </ul>
+    <div class="signout" id="signOut">
+      ⏻ Sign out
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div id="loading" style="display: none;">Loading...</div>
+
+  <!-- Content Section -->
+  <div class="content">
+    <!-- Home Section -->
+    <div class="home-section active-section" id="homeSection">
+      <div class="top-section">
+        <div class="stat-box" id="totalOrders">
+          <h1></h1>
+          <p>Total Orders Today</p>
+        </div>
+        <div class="stat-box" id="outofStock">
+          <h1 class="out-of-stock"></h1>
+          <p>Out of Stock</p>
+        </div>
+        <div class="stat-box" id="ordersShipped">
+          <h1></h1>
+          <p>Orders Shipped</p>
+        </div>
+      </div>
+
+      <div class="grid-container">
+        <div class="orders-summary">
+          <h4>Orders Summary</h4>
+          <ul id="summaryList">
+            
+          </ul>
+        </div>
+        <div class="snapshot">
+          <h4>Inventory Snapshot</h4>
+          <ul>
+          </ul>
+        </div>
+        <div class="status">
+          <h4>Production Status</h4>
+          <ul>
+          </ul>
+        </div>
+        <div class="tracking">
+          <h4>Shipment Tracking</h4>
+          <ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="signOutModal" class="outModal">
+      <div class="outModal-content">
+        <span class="outModal-close">&times;</span>
+        <h2 class="outModal-title">Sign out?</h2>
+        <p class="outModal-message">Are you sure you want to sign out?</p>
+        <div class="outModal-actions">
+          <button id="confirmSignOut" class="outModal-btn-primary">Yes, Sign Out</button>
+          <button id="cancelSignOut" class="outModal-btn-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>    
+
+    <!-- Orders Section -->
+    <div class="orders-section" id="ordersSection" style="display: none;">
+      <div class="actions">
+        <button id="addOrder">Add New Order</button>
+        <button id="editOrder">Edit Order</button>
+        <button id="deleteOrder">Delete Order</button>
+        <button id="cancelOrder">Cancel Order</button>
+        <button id="trackOrder">Track Order</button>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search Orders">
+        <select id="statusFilter">
+          <option value="">Status</option>
+          <option value="shipped">Shipped</option>
+          <option value="pending">Pending</option>
+          <option value="delayed">Delayed</option>
+        </select>
+        <select id="sorting">
+          <option value="">Sorting</option>
+          <option value="date">Date</option>
+          <option value="customer">Customer</option>
+          <option value="status">Status</option>
+        </select>
+      </div>
+      
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="selectAll"></th>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Items</th>
+            <th>Date</th>
+            <th>Delivery</th>
+          </tr>
+        </thead>
+        <tbody id="orderTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Add Order Modal -->
+    <div id="addOrderModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 class="modal-title">New Order</h2>
+
+        <form id="addOrderForm">
+          <!-- Customer Details Section -->
+          <div class="customer-details">
+            
+            <input type="text" id="customerFirstName" placeholder="First Name" required />
+            <input type="text" id="customerLastName" placeholder="Last Name" required />
+          </div>
+
+          <!-- Tab Navigation -->
+          <div class="tab-navigation">
+            <span class="tab-link active" data-tab="shippingDetails">Shipping Details</span>
+            <span class="tab-link" data-tab="productDetails">Product Details</span>
+            <span class="tab-link" data-tab="materialDetails">Material Details</span>
+            <span class="tab-link" data-tab="productionDetails">Production Details</span>
+            <span class="tab-link" data-tab="invoiceDetails">Invoice Details</span>
+          </div>
+
+          <!-- Tab Content: Shipping Details -->
+          <div class="tab-content active" id="shippingDetails">
+            <div class="form-group">
+              <label for="address1">Address 1</label>
+              <input type="text" id="address1" placeholder="123 Main Street." required />
+            </div>
+            <div class="form-group">
+              <label for="address2">Address 2</label>
+              <input type="text" id="address2" placeholder="Suite/Building" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" placeholder="New York" required />
+              </div>
+              <div class="form-group">
+                <label for="zip">Zip Code</label>
+                <input type="text" id="zip" placeholder="10001" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="country">Country</label>
+                <select id="country" required>
+                  <option value="">Select Country</option>
+                  <option value="USA">USA</option>
+                  <option value="Canada">Canada</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="state">State</label>
+                <select id="state" required>
+                  <option value="">Select State</option>
+                  <option value="NY">NY</option>
+                  <option value="NJ">NJ</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Content: Product Details -->
+          <div class="tab-content" id="productDetails" style="display: none;">
+            <div class="form-group">
+              <label for="productId">Product ID</label>
+              <input type="text" id="productId" placeholder="Enter Product ID" required />
+            </div>
+            <div class="form-group">
+              <label for="quantity">Quantity</label>
+              <input type="number" id="quantity" placeholder="Enter Quantity" required />
+            </div>
+            <div class="form-group">
+              <label for="cost">Product Cost</label>
+              <input type="number" id="cost" placeholder="Enter Product Cost" required />
+            </div>
+            <div class="form-group">
+              <label for="price">Selling Price</label>
+              <input type="number" id="price" placeholder="Enter Selling Price" required />
+            </div>
+          </div>
+
+          <!-- Tab Content: Material Details -->
+          <div class="tab-content" id="materialDetails" style="display: none;">
+            <div class="form-group">
+              
+            </div>
+          </div>
+
+          <!-- Tab Content: Production Details -->
+          <div class="tab-content" id="productionDetails" style="display: none;">
+            <div class="form-group">
+              
+            </div>
+            <div class="form-group">
+              <label for="completionDate">Estimated Completion Date</label>
+              <input type="date" id="completionDate" />
+            </div>
+          </div>
+
+          <!-- Tab Content: Invoice Details -->
+          <div class="tab-content" id="invoiceDetails" style="display: none;">
+            <h3>Invoice Summary</h3>
+          </div>
+
+          <!-- Modal Actions -->
+          <div class="modal-actions">
+            <button type="button" id="prevBtn" class="btn-previous" style="display: none;">Previous</button>
+            <button type="button" id="nextBtn" class="btn-primary">Next</button>
+            <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  <!-- Inventory Section (Hidden by Default) -->
+  <div class="inventory-section" id="inventorySection" style="display: none;">
+    <div class="actions">
+      <button id="addInventory">Add Inventory</button>
+      <button id="editInventory">Edit Inventory</button>
+      <button id="deleteInventory">Delete Inventory</button>
+      <button id="trackInventory">Track Inventory</button>
+      <button id="manageVendors">Manage Vendors</button>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" id="inventorySearchInput" placeholder="Search Inventory">
+      <select id="inventoryStatusFilter">
+        <option value="">Status</option>
+        <option value="instock">In Stock</option>
+        <option value="outofstock">Out of Stock</option>
+      </select>
+      <select id="inventorySorting">
+        <option value="">Sorting</option>
+        <option value="quantity">Quantity</option>
+        <option value="category">Category</option>
+        <option value="vendor">Vendor</option>
+      </select>
+    </div>
+    
+    <!-- Inventory Table -->
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="selectAllInventory"></th>
+          <th>Item ID</th>
+          <th>Item Name</th>
+          <th>Quantity</th>
+          <th>Stock Status</th>
+          <th>Category</th>
+          <th>Item Cost</th>
+          <th>Vendor</th>
+        </tr>
+      </thead>
+      <tbody id="inventoryTableBody">
+        <!-- Inventory rows will be dynamically populated here -->
+      </tbody>
+    </table>
+  </div>
+
+
+  <div id="addInventoryModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 class="modal-title">Add Inventory</h2>
+  
+      <form id="addInventoryForm">
+        <!-- Tabs Navigation -->
+        <div class="tab-navigation">
+          <span class="tab-link active" data-tab="inventoryDetails">Inventory Details</span>
+          <span class="tab-link" data-tab="stockDetails">Stock Details</span>
+          <span class="tab-link" data-tab="vendorDetails">Vendor Details</span>
+        </div>
+  
+        <!-- Tab Content: Inventory Details -->
+        <div class="tab-content" id="inventoryDetails">
+          <div class="form-group">
+            <label for="itemId">Item ID</label>
+            <input type="text" id="itemId" placeholder="Enter Item ID (e.g., INV123)" required />
+          </div>
+          <div class="form-group">
+            <label for="itemName">Item Name</label>
+            <input type="text" id="itemName" placeholder="Enter the Item Name" required />
+          </div>
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" required>
+              <option value="" disabled selected>Select a Category</option>
+              <option value="Metal">Metal</option>
+              <option value="Wood">Wood</option>
+              <option value="Tools">Tools</option>
+              <option value="Electric">Electric</option>
+            </select>
+          </div>
+        </div>
+  
+        <!-- Tab Content: Stock Details -->
+        <div class="tab-content" id="stockDetails" style="display: none;">
+          <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" placeholder="Enter Quantity" required />
+          </div>
+          <div class="form-group">
+            <label for="reorderLevel">Reorder Level</label>
+            <input type="number" id="reorderLevel" placeholder="Enter Reorder Level" required />
+          </div>
+          <div class="form-group">
+            <label for="unitOfMeasurement">Unit of Measurement</label>
+            <select id="unitOfMeasurement" required>
+              <option value="" disabled selected>Select a Unit</option>
+              <option value="Units">Units</option>
+              <option value="Kilograms">Kilograms</option>
+              <option value="Liters">Liters</option>
+              <option value="Packs">Packs</option>
+            </select>
+          </div>
+        </div>
+  
+        <!-- Tab Content: Vendor Details -->
+        <div class="tab-content" id="vendorDetails" style="display: none;">
+          <div class="form-group">
+            <label for="vendorName">Vendor Name</label>
+            <select id="vendorName" required>
+              <option value="" disabled selected>Select a Vendor</option>
+              <option value="Vendor A">Vendor A</option>
+              <option value="Vendor B">Vendor B</option>
+              <option value="Vendor C">Vendor C</option>
+              <option value="add-new">Add New Vendor</option>
+            </select>
+          </div>
+  
+          <!-- Hidden Input Field for New Vendor -->
+          <div class="form-group" id="newVendorField" style="display: none;">
+            <label for="newVendorName">New Vendor Name</label>
+            <input type="text" id="newVendorName" placeholder="Enter Vendor Name" />
+          </div>
+  
+          <div class="form-group">
+            <label for="leadTime">Lead Time</label>
+            <select id="leadTime" required>
+              <option value="" disabled selected>Select Lead Time</option>
+              <option value="7 Days">7 Days</option>
+              <option value="15 Days">15 Days</option>
+              <option value="30 Days">30 Days</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="warehouseLocation">Warehouse Location</label>
+            <input type="text" id="warehouseLocation" placeholder="Enter Warehouse Location" required />
+          </div>
+        </div>
+  
+        <!-- Modal Actions -->
+        <div class="modal-actions">
+          <button type="button" id="prevBtn" class="btn-previous" style="display: none;">Previous</button>
+          <button type="button" id="nextBtn" class="btn-primary">Next</button>
+          <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+</body>
