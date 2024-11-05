@@ -313,6 +313,6 @@ class ManagerDashboard {
 
 // Initialize Manager Dashboard
 document.addEventListener('DOMContentLoaded', () => {
-  const apiUrl = 'http://localhost:8000/api'; // Update with backend URL
+  const apiUrl = 'http://localhost:8080/api'; // Update with backend URL
   new ManagerDashboard(apiUrl);
 });

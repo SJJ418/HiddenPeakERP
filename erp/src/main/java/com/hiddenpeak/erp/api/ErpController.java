@@ -29,7 +29,7 @@ public class ErpController {
   @PostMapping("/createAccount")
   public ResponseEntity createAccount(@RequestBody String body) {
     log.info("Got a createAccount request with body: {}", body);
-    
+
     JSONObject object = new JSONObject(body);
     createdUsers.add(object.getString("userId"));
 
