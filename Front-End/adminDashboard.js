@@ -54,7 +54,7 @@ class AdminDashboard {
 
   // ====================== BACK-END API CALLS ====================== //
 
-  // Fetch dashboard stats (e.g., total orders, out-of-stock items)
+  // Fetch dashboard stats (e.g., users, active users)
   async fetchStateBoxes() {
     try {
       const response = await fetch(`${this.apiUrl}/dashboard-stats`);
@@ -62,9 +62,9 @@ class AdminDashboard {
       const data = await response.json();
 
       // Update UI with fetched data
-      document.getElementById('totalOrders').querySelector('h1').innerText = data.totalOrders;
-      document.getElementById('outofStock').querySelector('h1').innerText = data.outOfStock;
-      document.getElementById('ordersShipped').querySelector('h1').innerText = data.ordersShipped;
+      document.getElementById('users').querySelector('h1').innerText = data.users;
+      document.getElementById('activeUsers').querySelector('h1').innerText = data.activeUsers;
+      document.getElementById('departments').querySelector('h1').innerText = data.departments;
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
     }
