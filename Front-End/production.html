@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Production Dashboard</title>
+  <link rel="stylesheet" href="managerDashboard.css">
+  <link rel="stylesheet" href="common.css">
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script src="production.js" defer></script>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="logo.png" alt="Ops Logo" class="logo-img">
+      <h2>Production Mgr</h2>
+    </div>
+    <ul class="menu">
+      <li id="homeLink" class="active"><span>🏠</span> Home</li>
+      <li id="productionLink"><span>🏭</span> Production</li>
+      <li id="shippingLink"><span>🚚</span> Shipping</li>
+    </ul>
+    <div class="signout" id="signOut">
+      ⏻ Sign out
+    </div>
+  </div>
+
+  <div id="loading" style="display: none;">Loading...</div>
+
+  <!-- Content Section -->
+  <div class="content">
+    <!-- Home Section -->
+    <div class="home-section active-section" id="homeSection">
+      <div class="top-section">
+        <div class="stat-box" id="pendingOrders">
+          <h1>0</h1>
+          <p>Pending Orders</p>
+        </div>
+        <div class="stat-box" id="inProductionOrders">
+          <h1>0</h1>
+          <p>Orders in Production</p>
+        </div>
+        <div class="stat-box" id="completedOrders">
+          <h1>0</h1>
+          <p>Completed Orders</p>
+        </div>
+      </div>
+
+      <div class="grid-container">
+        <div class="stat-summary">
+          <h4>Shipped Orders</h4>
+          <ul id="shippedOrdersList"></ul>
+        </div>
+        <div class="stat-summary">
+          <h4>Delayed Orders</h4>
+          <ul id="delayedOrdersList"></ul>
+        </div>
+        <div class="stat-summary">
+          <h4>In-Progress Orders</h4>
+          <ul id="inProgressOrdersList"></ul>
+        </div>
+        <div class="stat-summary">
+          <h4>Upcoming Shipments</h4>
+          <ul id="upcomingShipmentsList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Production Section -->
+    <div class="production-section" id="productionSection" style="display: none;">
+      <div class="actions">
+        <button id="processOrderButton">Process Order</button>
+        <button id="editOrderButton">Edit</button>
+        <button id="cancelOrderButton">Cancel</button>
+        <button id="delayOrderButton">Delay Production</button>
+        <button id="completeOrderButton">Complete Production</button>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" id="searchProductionInput" placeholder="Search Production Orders">
+        <select id="productionStatusFilter">
+          <option value="">Status</option>
+          <option value="pending">Pending</option>
+          <option value="in_progress">In Progress</option>
+          <option value="completed">Completed</option>
+          <option value="delayed">Delayed</option>
+          <option value="canceled">Canceled</option>
+        </select>
+        <select id="productionSorting">
+          <option value="">Sorting</option>
+          <option value="date">Date</option>
+          <option value="priority">Priority</option>
+          <option value="status">Status</option>
+        </select>
+      </div>
+      
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="selectAllProduction"></th>
+            <th>Order ID</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Start Date</th>
+            <th>Estimated Completion</th>
+            <th>Priority</th>
+          </tr>
+        </thead>
+        <tbody id="productionTableBody">
+          <!-- Dynamically populated orders -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Process Order Modal -->
+    <div id="processOrderModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 class="modal-title">Process Pending Order</h2>
+        <form id="processOrderForm">
+          <div class="form-group">
+            <label for="batchId">Batch ID (Optional)</label>
+            <input type="text" id="batchId" placeholder="Enter Batch ID for Grouped Orders" />
+          </div>
+          <div class="form-group">
+            <label for="priority">Priority Level</label>
+            <select id="priority" required>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input type="date" id="startDate" required />
+          </div>
+          <div class="form-group">
+            <label for="estimatedCompletionDate">Estimated Completion Date</label>
+            <input type="date" id="estimatedCompletionDate" required />
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="btn-primary">Save</button>
+            <button type="button" class="btn-cancel close">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Order Modal -->
+    <div id="editOrderModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 class="modal-title">Edit Order</h2>
+        <form id="editOrderForm">
+          <div class="form-group">
+            <label for="batchIdEdit">Batch ID (Optional)</label>
+            <input type="text" id="batchIdEdit" placeholder="Enter Batch ID for Grouped Orders" />
+          </div>
+          <div class="form-group">
+            <label for="priorityEdit">Priority Level</label>
+            <select id="priorityEdit" required>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="startDateEdit">Start Date</label>
+            <input type="date" id="startDateEdit" required />
+          </div>
+          <div class="form-group">
+            <label for="estimatedCompletionDateEdit">Estimated Completion Date</label>
+            <input type="date" id="estimatedCompletionDateEdit" required />
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="btn-primary">Save Changes</button>
+            <button type="button" class="btn-cancel close">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Cancel Order Modal -->
+    <div id="cancelOrderModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Cancel Order</h2>
+        <p>Are you sure you want to cancel this order?</p>
+        <div class="modal-actions">
+          <button id="confirmCancelOrder" class="btn-primary">Yes, Cancel</button>
+          <button type="button" class="btn-cancel close">No, Go Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delay Order Modal -->
+    <div id="delayOrderModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Delay Production</h2>
+        <p>Are you sure you want to delay this order?</p>
+        <div class="modal-actions">
+          <button id="confirmDelayOrder" class="btn-primary">Yes, Delay</button>
+          <button type="button" class="btn-cancel close">No, Go Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Complete Production Modal -->
+    <div id="completeOrderModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Complete Production</h2>
+        <p>Are you sure you want to mark this order as completed?</p>
+        <div class="modal-actions">
+          <button id="confirmCompleteOrder" class="btn-primary">Yes, Complete</button>
+          <button type="button" class="btn-cancel close">No, Go Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shipping Section -->
+    <div class="shipping-section" id="shippingSection" style="display: none;">
+      <div class="actions">
+        <button id="shipOrderButton">Ship Order</button>
+        <button id="editShippingButton">Edit Shipping</button>
+        <button id="cancelShippingButton">Cancel Shipping</button>
+        <button id="trackingButton">Tracking</button>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" id="searchShippingInput" placeholder="Search Shipping Orders">
+        <select id="shippingStatusFilter">
+          <option value="">Status</option>
+          <option value="ready">Ready to Ship</option>
+          <option value="shipped">Shipped</option>
+          <option value="in_transit">In Transit</option>
+          <option value="delayed">Delayed</option>
+          <option value="delivered">Delivered</option>
+        </select>
+        <select id="shippingSorting">
+          <option value="">Sorting</option>
+          <option value="date">Date</option>
+          <option value="priority">Priority</option>
+          <option value="status">Status</option>
+        </select>
+      </div>
+
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="selectAllShipping"></th>
+            <th>Order ID</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Shipping Date</th>
+            <th>Estimated Arrival</th>
+            <th>Priority</th>
+          </tr>
+        </thead>
+        <tbody id="shippingTableBody">
+          <!-- Dynamically populated shipping orders -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Ship Order Modal -->
+    <div id="shipOrderModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Ship Order</h2>
+        <p>Generate a shipping label and proceed with shipment.</p>
+        <div class="modal-actions">
+          <button id="confirmShipOrder" class="btn-primary">Generate Label</button>
+          <button type="button" class="btn-cancel close">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Shipping Modal -->
+    <div id="editShippingModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit Shipping Details</h2>
+        <form id="editShippingForm">
+          <!-- Form fields for editing shipping details -->
+          <div class="form-group">
+            <label for="shippingAddress">Shipping Address</label>
+            <input type="text" id="shippingAddress" required>
+          </div>
+          <div class="form-group">
+            <label for="shippingPriority">Priority Level</label>
+            <select id="shippingPriority" required>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="btn-primary">Save Changes</button>
+            <button type="button" class="btn-cancel close">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Cancel Shipping Modal -->
+    <div id="cancelShippingModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Cancel Shipping</h2>
+        <p>Are you sure you want to cancel this shipment?</p>
+        <div class="modal-actions">
+          <button id="confirmCancelShipping" class="btn-primary">Yes, Cancel</button>
+          <button type="button" class="btn-cancel close">No, Go Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tracking Modal -->
+    <div id="trackingModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Tracking Information</h2>
+        <p id="trackingInfo">Tracking details will appear here.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel close">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sign Out Modal -->
+    <div id="signOutModal" class="outModal">
+      <div class="outModal-content">
+        <span class="outModal-close">&times;</span>
+        <h2 class="outModal-title">Sign out?</h2>
+        <p class="outModal-message">Are you sure you want to sign out?</p>
+        <div class="outModal-actions">
+          <button id="confirmSignOut" class="outModal-btn-primary">Yes, Sign Out</button>
+          <button id="cancelSignOut" class="outModal-btn-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+</body>
+</html>
