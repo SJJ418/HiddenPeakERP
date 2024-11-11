@@ -2,17 +2,17 @@ class AdminDashboard {
   constructor(apiUrl) {
     this.apiUrl = apiUrl;
 
-    // Front-end: Cache DOM elements
+    // Cache DOM elements with safe checks
     this.homeLink = document.getElementById('homeLink');
     this.usersLink = document.getElementById('usersLink');
     this.homeSection = document.getElementById('homeSection');
     this.usersSection = document.getElementById('usersSection');
     this.addUserModal = document.getElementById('addUserModal');
     this.addUserButton = document.getElementById('addUser');
-    this.closeModal = this.addUserModal.querySelector('.close');
+    this.closeModal = this.addUserModal ? this.addUserModal.querySelector('.close') : null;
     this.addUserForm = document.getElementById('addUserForm');
-    this.saveAndAddAnotherButton = document.getElementById('saveAndAddAnother');
-    this.cancelButton = this.addUserModal.querySelector('.btn-cancel');
+    this.saveAndAddAnotherButton = document.querySelector('.btn-secondary');
+    this.cancelButton = this.addUserModal ? this.addUserModal.querySelector('.btn-cancel') : null;
     this.searchInput = document.getElementById('searchInput');
     this.statusFilter = document.getElementById('statusFilter');
     this.departmentFilter = document.getElementById('departmentFilter');
@@ -20,41 +20,59 @@ class AdminDashboard {
     this.userTableBody = document.getElementById('userTableBody');
     this.signOutButton = document.getElementById('signOut');
 
-    // Initialize event listeners and load initial data
     this.initializeEvents();
-    this.initializeDashboard();
+    this.initializeDashboard(); 
   }
 
-  // Setup event listeners for user interactions
-  initializeEvents() {
-    this.homeLink.addEventListener('click', () => this.switchSection(this.homeSection, this.homeLink));
-    this.usersLink.addEventListener('click', () => this.switchSection(this.usersSection, this.usersLink));
-    this.signOutButton.addEventListener('click', this.signOut);
-    this.addUserButton.addEventListener('click', () => this.toggleModal(true));
-    this.closeModal.addEventListener('click', () => this.toggleModal(false));
-    this.cancelButton.addEventListener('click', () => this.toggleModal(false));
-    this.saveAndAddAnotherButton.addEventListener('click', (event) => this.saveAndAddAnother(event));
-    window.addEventListener('click', (event) => {
-      if (event.target === this.addUserModal) this.toggleModal(false);
-    });
-    this.addUserForm.addEventListener('submit', (event) => this.handleAddUser(event));
-    this.searchInput.addEventListener('input', () => this.applyFilters());
-    this.statusFilter.addEventListener('change', () => this.applyFilters());
-    this.departmentFilter.addEventListener('change', () => this.applyFilters());
-    this.selectAllCheckbox.addEventListener('change', () => this.toggleSelectAll());
-  }
-
-  // Dashboard initialization (calls back-end APIs to populate data)
   initializeDashboard() {
-    this.fetchStateBoxes(); // Back-end: Fetch and display dashboard statistics
-    this.fetchActivities(); // Back-end: Fetch and display recent activities
-    this.fetchUsers();      // Back-end: Fetch and render users
-    this.initializeGraphs(); // Front-end: Initialize charts/graphs
+    this.fetchStateBoxes();      
+    this.fetchActivities();      
+    this.fetchUsers();           
+    this.initializeGraphs();    
+  }
+
+  initializeEvents() {
+    if (this.homeLink) {
+      this.homeLink.addEventListener('click', () => this.switchSection(this.homeSection, this.homeLink));
+    }
+    if (this.usersLink) {
+      this.usersLink.addEventListener('click', () => this.switchSection(this.usersSection, this.usersLink));
+    }
+    if (this.signOutButton) {
+      this.signOutButton.addEventListener('click', () => this.signOut());
+    }
+    if (this.addUserButton) {
+      this.addUserButton.addEventListener('click', () => this.toggleModal(true));
+    }
+    if (this.closeModal) {
+      this.closeModal.addEventListener('click', () => this.toggleModal(false));
+    }
+    if (this.cancelButton) {
+      this.cancelButton.addEventListener('click', () => this.toggleModal(false));
+    }
+    if (this.saveAndAddAnotherButton) {
+      this.saveAndAddAnotherButton.addEventListener('click', (event) => this.saveAndAddAnother(event));
+    }
+    if (this.addUserForm) {
+      this.addUserForm.addEventListener('submit', (event) => this.handleAddUser(event));
+    }
+    if (this.searchInput) {
+      this.searchInput.addEventListener('input', () => this.applyFilters());
+    }
+    if (this.statusFilter) {
+      this.statusFilter.addEventListener('change', () => this.applyFilters());
+    }
+    if (this.departmentFilter) {
+      this.departmentFilter.addEventListener('change', () => this.applyFilters());
+    }
+    if (this.selectAllCheckbox) {
+      this.selectAllCheckbox.addEventListener('change', () => this.toggleSelectAll());
+    }
   }
 
   // ====================== BACK-END API CALLS ====================== //
 
-  // Fetch dashboard stats (e.g., users, active users)
+  // Fetch dashboard stats (e.g., total orders, out-of-stock items)
   async fetchStateBoxes() {
     try {
       const response = await fetch(`${this.apiUrl}/dashboard-stats`);
@@ -177,30 +195,30 @@ class AdminDashboard {
     link.classList.add('active');
   }
 
-  // Sign-out modal handling
   signOut() {
     const modal = document.getElementById('signOutModal');
     const closeModal = modal.querySelector('.outModal-close');
     const confirmButton = document.getElementById('confirmSignOut');
     const cancelButton = document.getElementById('cancelSignOut');
-
-    // Show the modal
+  
+    console.log("Sign-out modal opened"); // Debugging line
     modal.style.display = 'flex';
-
-    // Close the modal on cancel or close button
-    cancelButton.addEventListener('click', () => modal.style.display = 'none');
+  
+    cancelButton.addEventListener('click', () => {
+      modal.style.display = 'none';
+      console.log("Sign-out modal closed");
+    });
     closeModal.addEventListener('click', () => modal.style.display = 'none');
-
-    // Confirm sign out and redirect
+  
     confirmButton.addEventListener('click', () => window.location.href = 'welcome.html');
-
-    // Close the modal if clicked outside
+  
     window.addEventListener('click', (event) => {
       if (event.target === modal) {
         modal.style.display = 'none';
       }
     });
   }
+
 
   // Show or hide the add user modal
   toggleModal(visible) {
