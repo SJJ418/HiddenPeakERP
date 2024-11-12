@@ -34,7 +34,6 @@ public class ErpController {
     createdUsers.add(object.getString("userId"));
 
     return new ResponseEntity(HttpStatus.OK);
-
   }
 
   @PostMapping("/login")

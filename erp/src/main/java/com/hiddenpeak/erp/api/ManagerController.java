@@ -7,10 +7,14 @@ import com.hiddenpeak.erp.dal.manager.Order;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,21 +27,43 @@ public class ManagerController {
 
   List<String> createdUsers = new ArrayList<>();
 
+  List<Order> orders = new ArrayList<>();
+
   @GetMapping("/api/dashboard-data")
   public ResponseEntity getDashboardData() {
     log.info("Retrieving Dashboard Data");
     return ResponseEntity.ok(new DashboardData(5, 10, 6));
   }
+
   @GetMapping("/api/orders")
   public ResponseEntity getOrders() {
     log.info("Retrieving Orders");
-    List<Order> orders = new ArrayList<>();
-    Order order1 = new Order(1, "Test Order", 5, "NEW", "testCategory", 5.00, "test Vendor");
-    Order order2 = new Order(2, "Test Order", 6, "NEW", "testCategory", 15.00, "test Vendor");
-    orders.add(order1);
-    orders.add(order2);
     return ResponseEntity.ok(orders);
   }
+
+  @PostMapping("/api/addOrder")
+  public ResponseEntity addOrder(@RequestBody String data) {
+    log.info("Adding Orders");
+
+    log.info("got data: {}", data);
+
+    JSONObject object = new JSONObject(data);
+
+    int id = orders.size() + 1;
+    String customerFirstName = object.getString("customerFirstName");
+    String customerLastName = object.getString("customerLastName");
+    int cost = Integer.parseInt(object.getString("cost"));
+    int quantity = Integer.parseInt(object.getString("quantity"));
+    String date = object.getString("completionDate");
+    String zip = object.getString("zip");
+
+    Order order = new Order(id, customerFirstName + " " + customerLastName, cost, "NEW", quantity, date, zip);
+
+    orders.add(order);
+
+    return new ResponseEntity(HttpStatus.OK);
+  }
+
 
   @GetMapping("/api/inventory")
   public ResponseEntity getInventory() {
@@ -50,4 +76,6 @@ public class ManagerController {
     return ResponseEntity.ok(inventories);
   }
 }
+
+
 

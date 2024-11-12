@@ -8,9 +8,9 @@ import lombok.Data;
 public class Order {
   int id;
   String name;
-  int quantity;
+  int quantity;    // cost
   String status;
-  String category;
-  double cost;
-  String vendor;
+  int category;    // quantity
+  String cost;     // date
+  String vendor;   // delivery
 }
