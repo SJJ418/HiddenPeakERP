@@ -128,121 +128,123 @@
       </table>
     </div>
 
-    <!-- Add Order Modal -->
-    <div id="addOrderModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2 class="modal-title">New Order</h2>
+<!-- Add Order Modal -->
+<div id="addOrderModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 class="modal-title">New Order</h2>
 
-        <form id="addOrderForm">
-          <!-- Customer Details Section -->
-          <div class="customer-details">
-            
-            <input type="text" id="customerFirstName" placeholder="First Name" required />
-            <input type="text" id="customerLastName" placeholder="Last Name" required />
-          </div>
-
-          <!-- Tab Navigation -->
-          <div class="tab-navigation">
-            <span class="tab-link active" data-tab="shippingDetails">Shipping Details</span>
-            <span class="tab-link" data-tab="productDetails">Product Details</span>
-            <span class="tab-link" data-tab="materialDetails">Material Details</span>
-            <span class="tab-link" data-tab="productionDetails">Production Details</span>
-            <span class="tab-link" data-tab="invoiceDetails">Invoice Details</span>
-          </div>
-
-          <!-- Tab Content: Shipping Details -->
-          <div class="tab-content active" id="shippingDetails">
-            <div class="form-group">
-              <label for="address1">Address 1</label>
-              <input type="text" id="address1" placeholder="123 Main Street." required />
-            </div>
-            <div class="form-group">
-              <label for="address2">Address 2</label>
-              <input type="text" id="address2" placeholder="Suite/Building" />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="city">City</label>
-                <input type="text" id="city" placeholder="New York" required />
-              </div>
-              <div class="form-group">
-                <label for="zip">Zip Code</label>
-                <input type="text" id="zip" placeholder="10001" required />
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="country">Country</label>
-                <select id="country" required>
-                  <option value="">Select Country</option>
-                  <option value="USA">USA</option>
-                  <option value="Canada">Canada</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="state">State</label>
-                <select id="state" required>
-                  <option value="">Select State</option>
-                  <option value="NY">NY</option>
-                  <option value="NJ">NJ</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tab Content: Product Details -->
-          <div class="tab-content" id="productDetails" style="display: none;">
-            <div class="form-group">
-              <label for="productId">Product ID</label>
-              <input type="text" id="productId" placeholder="Enter Product ID" required />
-            </div>
-            <div class="form-group">
-              <label for="quantity">Quantity</label>
-              <input type="number" id="quantity" placeholder="Enter Quantity" required />
-            </div>
-            <div class="form-group">
-              <label for="cost">Product Cost</label>
-              <input type="number" id="cost" placeholder="Enter Product Cost" required />
-            </div>
-            <div class="form-group">
-              <label for="price">Selling Price</label>
-              <input type="number" id="price" placeholder="Enter Selling Price" required />
-            </div>
-          </div>
-
-          <!-- Tab Content: Material Details -->
-          <div class="tab-content" id="materialDetails" style="display: none;">
-            <div class="form-group">
-              
-            </div>
-          </div>
-
-          <!-- Tab Content: Production Details -->
-          <div class="tab-content" id="productionDetails" style="display: none;">
-            <div class="form-group">
-              
-            </div>
-            <div class="form-group">
-              <label for="completionDate">Estimated Completion Date</label>
-              <input type="date" id="completionDate" />
-            </div>
-          </div>
-
-          <!-- Tab Content: Invoice Details -->
-          <div class="tab-content" id="invoiceDetails" style="display: none;">
-            <h3>Invoice Summary</h3>
-          </div>
-
-          <!-- Modal Actions -->
-          <div class="modal-actions">
-            <button type="button" id="prevBtn" class="btn-previous" style="display: none;">Previous</button>
-            <button type="button" id="nextBtn" class="btn-primary">Next</button>
-            <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
-          </div>
-        </form>
+    <form id="addOrderForm">
+      <!-- Customer Details Section -->
+      <div class="customer-details">
+        <input type="text" id="customerFirstName" name="customerFirstName" placeholder="First Name" required />
+        <input type="text" id="customerLastName" name="customerLastName" placeholder="Last Name" required />
       </div>
-    </div>
+
+      <!-- Tab Navigation -->
+      <div class="tab-navigation">
+        <span class="tab-link active" data-tab="shippingDetails">Shipping Details</span>
+        <span class="tab-link" data-tab="productDetails">Product Details</span>
+        <span class="tab-link" data-tab="materialDetails">Material Details</span>
+        <span class="tab-link" data-tab="productionDetails">Production Details</span>
+        <span class="tab-link" data-tab="invoiceDetails">Invoice Details</span>
+      </div>
+
+      <!-- Tab Content: Shipping Details -->
+      <div class="tab-content active" id="shippingDetails">
+        <div class="form-group">
+          <label for="address1">Address 1</label>
+          <input type="text" id="address1" name="address1" placeholder="123 Main Street." required />
+        </div>
+        <div class="form-group">
+          <label for="address2">Address 2</label>
+          <input type="text" id="address2" name="address2" placeholder="Suite/Building" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" placeholder="New York" required />
+          </div>
+          <div class="form-group">
+            <label for="zip">Zip Code</label>
+            <input type="text" id="zip" name="zip" placeholder="10001" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="country">Country</label>
+            <select id="country" name="country" required>
+              <option value="">Select Country</option>
+              <option value="USA">USA</option>
+              <option value="Canada">Canada</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="state">State</label>
+            <select id="state" name="state" required>
+              <option value="">Select State</option>
+              <option value="NY">NY</option>
+              <option value="NJ">NJ</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content: Product Details -->
+      <div class="tab-content" id="productDetails" style="display: none;">
+        <div class="form-group">
+          <label for="productId">Product ID</label>
+          <input type="text" id="productId" name="productId" placeholder="Enter Product ID" required />
+        </div>
+        <div class="form-group">
+          <label for="quantity">Quantity</label>
+          <input type="number" id="quantity" name="quantity" placeholder="Enter Quantity" required />
+        </div>
+        <div class="form-group">
+          <label for="cost">Product Cost</label>
+          <input type="number" id="cost" name="cost" placeholder="Enter Product Cost" required />
+        </div>
+        <div class="form-group">
+          <label for="price">Selling Price</label>
+          <input type="number" id="price" name="price" placeholder="Enter Selling Price" required />
+        </div>
+      </div>
+
+      <!-- Tab Content: Material Details -->
+      <div class="tab-content" id="materialDetails" style="display: none;">
+        <div class="form-group">
+          <label for="materialType">Material Type</label>
+          <input type="text" id="materialType" name="materialType" placeholder="Enter Material Type" />
+        </div>
+      </div>
+
+      <!-- Tab Content: Production Details -->
+      <div class="tab-content" id="productionDetails" style="display: none;">
+        <div class="form-group">
+          <label for="completionDate">Estimated Completion Date</label>
+          <input type="date" id="completionDate" name="completionDate" />
+        </div>
+      </div>
+
+      <!-- Tab Content: Invoice Details -->
+      <div class="tab-content" id="invoiceDetails" style="display: none;">
+        <h3>Invoice Summary</h3>
+        <div class="form-group">
+          <label for="invoiceAmount">Invoice Amount</label>
+          <input type="number" id="invoiceAmount" name="invoiceAmount" placeholder="Enter Invoice Amount" required />
+        </div>
+      </div>
+
+      <!-- Modal Actions -->
+      <div class="modal-actions">
+        <button type="button" id="prevBtn" class="btn-previous" style="display: none;">Previous</button>
+        <button type="button" id="nextBtn" class="btn-primary">Next</button>
+        <button type="submit" id="submitOrder" class="btn-primary" style="display: none;">Submit Order</button>
+        <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
 
   <!-- Inventory Section (Hidden by Default) -->
   <div class="inventory-section" id="inventorySection" style="display: none;">
