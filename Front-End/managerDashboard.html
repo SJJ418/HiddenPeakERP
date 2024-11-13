@@ -243,149 +243,157 @@
 </div>
 
 
-  <!-- Inventory Section (Hidden by Default) -->
-  <div class="inventory-section" id="inventorySection" style="display: none;">
-    <div class="actions">
-      <button id="addInventory">Add Inventory</button>
-      <button id="editInventory">Edit Inventory</button>
-      <button id="deleteInventory">Delete Inventory</button>
-      <button id="trackInventory">Track Inventory</button>
-      <button id="manageVendors">Manage Vendors</button>
-    </div>
-
-    <div class="search-bar">
-      <input type="text" id="inventorySearchInput" placeholder="Search Inventory">
-      <select id="inventoryStatusFilter">
-        <option value="">Status</option>
-        <option value="instock">In Stock</option>
-        <option value="outofstock">Out of Stock</option>
-      </select>
-      <select id="inventorySorting">
-        <option value="">Sorting</option>
-        <option value="quantity">Quantity</option>
-        <option value="category">Category</option>
-        <option value="vendor">Vendor</option>
-      </select>
-    </div>
-    
-    <!-- Inventory Table -->
-    <table class="order-table">
-      <thead>
-        <tr>
-          <th><input type="checkbox" id="selectAllInventory"></th>
-          <th>Item ID</th>
-          <th>Item Name</th>
-          <th>Quantity</th>
-          <th>Stock Status</th>
-          <th>Category</th>
-          <th>Item Cost</th>
-          <th>Vendor</th>
-        </tr>
-      </thead>
-      <tbody id="inventoryTableBody">
-        <!-- Inventory rows will be dynamically populated here -->
-      </tbody>
-    </table>
+<!-- Inventory Section (Hidden by Default) -->
+<div class="inventory-section" id="inventorySection" style="display: none;">
+  <!-- Inventory Management Actions -->
+  <div class="actions">
+    <button id="addInventory">Add Inventory</button>
+    <button id="editInventory">Edit Inventory</button>
+    <button id="deleteInventory">Delete Inventory</button>
+    <button id="trackInventory">Track Inventory</button>
+    <button id="manageVendors">Manage Vendors</button>
   </div>
 
-
-  <div id="addInventoryModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2 class="modal-title">Add Inventory</h2>
-  
-      <form id="addInventoryForm">
-        <!-- Tabs Navigation -->
-        <div class="tab-navigation">
-          <span class="tab-link active" data-tab="inventoryDetails">Inventory Details</span>
-          <span class="tab-link" data-tab="stockDetails">Stock Details</span>
-          <span class="tab-link" data-tab="vendorDetails">Vendor Details</span>
-        </div>
-  
-        <!-- Tab Content: Inventory Details -->
-        <div class="tab-content" id="inventoryDetails">
-          <div class="form-group">
-            <label for="itemId">Item ID</label>
-            <input type="text" id="itemId" placeholder="Enter Item ID (e.g., INV123)" required />
-          </div>
-          <div class="form-group">
-            <label for="itemName">Item Name</label>
-            <input type="text" id="itemName" placeholder="Enter the Item Name" required />
-          </div>
-          <div class="form-group">
-            <label for="category">Category</label>
-            <select id="category" required>
-              <option value="" disabled selected>Select a Category</option>
-              <option value="Metal">Metal</option>
-              <option value="Wood">Wood</option>
-              <option value="Tools">Tools</option>
-              <option value="Electric">Electric</option>
-            </select>
-          </div>
-        </div>
-  
-        <!-- Tab Content: Stock Details -->
-        <div class="tab-content" id="stockDetails" style="display: none;">
-          <div class="form-group">
-            <label for="quantity">Quantity</label>
-            <input type="number" id="quantity" placeholder="Enter Quantity" required />
-          </div>
-          <div class="form-group">
-            <label for="reorderLevel">Reorder Level</label>
-            <input type="number" id="reorderLevel" placeholder="Enter Reorder Level" required />
-          </div>
-          <div class="form-group">
-            <label for="unitOfMeasurement">Unit of Measurement</label>
-            <select id="unitOfMeasurement" required>
-              <option value="" disabled selected>Select a Unit</option>
-              <option value="Units">Units</option>
-              <option value="Kilograms">Kilograms</option>
-              <option value="Liters">Liters</option>
-              <option value="Packs">Packs</option>
-            </select>
-          </div>
-        </div>
-  
-        <!-- Tab Content: Vendor Details -->
-        <div class="tab-content" id="vendorDetails" style="display: none;">
-          <div class="form-group">
-            <label for="vendorName">Vendor Name</label>
-            <select id="vendorName" required>
-              <option value="" disabled selected>Select a Vendor</option>
-              <option value="select-vendor">Select Vendor</option>
-              <option value="add-new">Add New Vendor</option>
-            </select>
-          </div>
-  
-          <!-- Hidden Input Field for New Vendor -->
-          <div class="form-group" id="newVendorField" style="display: none;">
-            <label for="newVendorName">New Vendor Name</label>
-            <input type="text" id="newVendorName" placeholder="Enter Vendor Name" />
-          </div>
-  
-          <div class="form-group">
-            <label for="leadTime">Lead Time</label>
-            <select id="leadTime" required>
-              <option value="" disabled selected>Select Lead Time</option>
-              <option value="7 Days">7 Days</option>
-              <option value="15 Days">15 Days</option>
-              <option value="30 Days">30 Days</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="warehouseLocation">Warehouse Location</label>
-            <input type="text" id="warehouseLocation" placeholder="Enter Warehouse Location" required />
-          </div>
-        </div>
-  
-        <!-- Modal Actions -->
-        <div class="modal-actions">
-          <button type="button" id="prevBtn" class="btn-previous" style="display: none;">Previous</button>
-          <button type="button" id="nextBtn" class="btn-primary">Next</button>
-          <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
-        </div>
-      </form>
-    </div>
+  <!-- Search and Filter Options -->
+  <div class="search-bar">
+    <input type="text" id="inventorySearchInput" placeholder="Search Inventory">
+    <select id="inventoryStatusFilter">
+      <option value="">Status</option>
+      <option value="instock">In Stock</option>
+      <option value="outofstock">Out of Stock</option>
+    </select>
+    <select id="inventorySorting">
+      <option value="">Sorting</option>
+      <option value="quantity">Quantity</option>
+      <option value="category">Category</option>
+      <option value="vendor">Vendor</option>
+    </select>
   </div>
-  
+
+  <!-- Inventory Table -->
+  <table class="order-table">
+    <thead>
+      <tr>
+        <th><input type="checkbox" id="selectAllInventory"></th>
+        <th>Item ID</th>
+        <th>Item Name</th>
+        <th>Quantity</th>
+        <th>Stock Status</th>
+        <th>Category</th>
+        <th>Item Cost</th>
+        <th>Vendor</th>
+        <th>Inventory Date</th> <!-- New Inventory Date Column -->
+      </tr>
+    </thead>
+    <tbody id="inventoryTableBody">
+      <!-- Inventory rows will be dynamically populated here -->
+    </tbody>
+  </table>
+</div>
+
+<!-- Add Inventory Modal -->
+<div id="addInventoryModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 class="modal-title">Add Inventory</h2>
+
+    <form id="addInventoryForm">
+      <!-- Tabs Navigation -->
+      <div class="tab-navigation">
+        <span class="tab-link active" data-tab="inventoryDetails">Inventory Details</span>
+        <span class="tab-link" data-tab="stockDetails">Stock Details</span>
+        <span class="tab-link" data-tab="vendorDetails">Vendor Details</span>
+      </div>
+
+      <!-- Tab Content: Inventory Details -->
+      <div class="tab-content" id="inventoryDetails">
+        <div class="form-group">
+          <label for="itemId">Item ID</label>
+          <input type="text" id="itemId" name="itemId" placeholder="Enter Item ID (e.g., INV123)" required />
+        </div>
+        <div class="form-group">
+          <label for="itemName">Item Name</label>
+          <input type="text" id="itemName" name="itemName" placeholder="Enter the Item Name" required />
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" name="category" required>
+            <option value="" disabled selected>Select a Category</option>
+            <option value="Metal">Metal</option>
+            <option value="Wood">Wood</option>
+            <option value="Tools">Tools</option>
+            <option value="Electric">Electric</option>
+          </select>
+        </div>
+        <!-- New Inventory Date Field -->
+        <div class="form-group">
+          <label for="inventoryDate">Inventory Date</label>
+          <input type="date" id="inventoryDate" name="inventoryDate" placeholder="Select Inventory Date" />
+        </div>
+      </div>
+
+      <!-- Tab Content: Stock Details -->
+      <div class="tab-content" id="stockDetails" style="display: none;">
+        <div class="form-group">
+          <label for="quantity">Quantity</label>
+          <input type="number" id="quantity" name="quantity" placeholder="Enter Quantity" required />
+        </div>
+        <div class="form-group">
+          <label for="reorderLevel">Reorder Level</label>
+          <input type="number" id="reorderLevel" name="reorderLevel" placeholder="Enter Reorder Level" required />
+        </div>
+        <div class="form-group">
+          <label for="unitOfMeasurement">Unit of Measurement</label>
+          <select id="unitOfMeasurement" name="unitOfMeasurement" required>
+            <option value="" disabled selected>Select a Unit</option>
+            <option value="Units">Units</option>
+            <option value="Kilograms">Kilograms</option>
+            <option value="Liters">Liters</option>
+            <option value="Packs">Packs</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tab Content: Vendor Details -->
+      <div class="tab-content" id="vendorDetails" style="display: none;">
+        <div class="form-group">
+          <label for="vendorName">Vendor Name</label>
+          <select id="vendorName" name="vendorName" required>
+            <option value="" disabled selected>Select a Vendor</option>
+            <option value="select-vendor">Select Vendor</option>
+            <option value="add-new">Add New Vendor</option>
+          </select>
+        </div>
+
+        <!-- Hidden Input Field for New Vendor -->
+        <div class="form-group" id="newVendorField" style="display: none;">
+          <label for="newVendorName">New Vendor Name</label>
+          <input type="text" id="newVendorName" name="newVendorName" placeholder="Enter Vendor Name" />
+        </div>
+
+        <div class="form-group">
+          <label for="leadTime">Lead Time</label>
+          <select id="leadTime" name="leadTime" required>
+            <option value="" disabled selected>Select Lead Time</option>
+            <option value="7 Days">7 Days</option>
+            <option value="15 Days">15 Days</option>
+            <option value="30 Days">30 Days</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="warehouseLocation">Warehouse Location</label>
+          <input type="text" id="warehouseLocation" name="warehouseLocation" placeholder="Enter Warehouse Location" required />
+        </div>
+      </div>
+
+      <!-- Modal Actions -->
+      <div class="modal-actions">
+        <button type="button" id="prevBtn" class="btn-previous" style="display: none;">Previous</button>
+        <button type="button" id="nextBtn" class="btn-primary">Next</button>
+        <button type="submit" id="submitInventory" class="btn-primary" style="display: none;">Add Inventory</button>
+        <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
 </body>

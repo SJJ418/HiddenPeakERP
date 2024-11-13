@@ -254,6 +254,8 @@ class ManagerDashboard {
           <td>${item.category || ''}</td>
           <td>${item.cost || ''}</td>
           <td>${item.vendor || ''}</td>
+          <td>${item.inventoryDate || ''}</td> <!-- Add this line -->
+
         </tr>`
       )
       .join('');
