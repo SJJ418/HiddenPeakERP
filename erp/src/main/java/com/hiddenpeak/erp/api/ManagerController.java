@@ -25,9 +25,9 @@ public class ManagerController {
   @Autowired
   ProductionManager productionManager;
 
-  List<String> createdUsers = new ArrayList<>();
-
   List<Order> orders = new ArrayList<>();
+
+  List<Inventory> inventories = new ArrayList<>();
 
   @GetMapping("/api/dashboard-data")
   public ResponseEntity getDashboardData() {
@@ -35,17 +35,9 @@ public class ManagerController {
     return ResponseEntity.ok(new DashboardData(5, 10, 6));
   }
 
-  @GetMapping("/api/orders")
-  public ResponseEntity getOrders() {
-    log.info("Retrieving Orders");
-    return ResponseEntity.ok(orders);
-  }
-
   @PostMapping("/api/addOrder")
   public ResponseEntity addOrder(@RequestBody String data) {
     log.info("Adding Orders");
-
-    log.info("got data: {}", data);
 
     JSONObject object = new JSONObject(data);
 
@@ -64,15 +56,39 @@ public class ManagerController {
     return new ResponseEntity(HttpStatus.OK);
   }
 
+  @GetMapping("/api/orders")
+  public ResponseEntity getOrders() {
+    log.info("Retrieving Orders");
+    return ResponseEntity.ok(orders);
+  }
+
+  @PostMapping("/api/addInventory")
+  public ResponseEntity addInventory(@RequestBody String data) {
+    log.info("Adding Inventory");
+    log.info("got data: {}", data);
+
+    // TODO: add actual data fields
+    JSONObject object = new JSONObject(data);
+    int id = inventories.size() + 1;
+//    String customerFirstName = object.getString("customerFirstName");
+//    String customerLastName = object.getString("customerLastName");
+//    int cost = Integer.parseInt(object.getString("cost"));
+//    int quantity = Integer.parseInt(object.getString("quantity"));
+//    String date = object.getString("completionDate");
+//    String zip = object.getString("zip");
+
+
+    Inventory inventory = new Inventory(id, "Test Inventory", 5, "NEW", "testCategory", 10.00, "test Vendor");
+
+    inventories.add(inventory);
+
+    return new ResponseEntity(HttpStatus.OK);
+  }
+
 
   @GetMapping("/api/inventory")
   public ResponseEntity getInventory() {
     log.info("Retrieving Inventory");
-    List<Inventory> inventories = new ArrayList<>();
-    Inventory inventory1 = new Inventory(1, "Test Inventory", 5, "NEW", "testCategory", 10.00, "test Vendor");
-    Inventory inventory2 = new Inventory(2, "Test Inventory", 6, "NEW", "testCategory", 20.00, "test Vendor");
-    inventories.add(inventory1);
-    inventories.add(inventory2);
     return ResponseEntity.ok(inventories);
   }
 }

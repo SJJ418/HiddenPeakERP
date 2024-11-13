@@ -1,17 +1,12 @@
 package com.hiddenpeak.erp.api;
 
-
-import com.hiddenpeak.erp.ProductionManager;
-import com.hiddenpeak.erp.dal.ProductionReport;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,10 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 @Slf4j
-public class ErpController {
-
-  @Autowired
-  ProductionManager productionManager;
+public class LoginController {
 
   List<String> createdUsers = new ArrayList<>();
 
@@ -49,16 +41,6 @@ public class ErpController {
       log.error("User not found");
       return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
-
-  @PostMapping("/submitPurchaseOrder")
-  public void submitPurchaseOrder(@RequestBody String id) {
-    //productionManager.generateProductionReport(id);
-  }
-
-  @GetMapping("/getProductionReports")
-  public List<ProductionReport> getProductionReports() {
-    return productionManager.getProductionReports();
   }
 
 }
