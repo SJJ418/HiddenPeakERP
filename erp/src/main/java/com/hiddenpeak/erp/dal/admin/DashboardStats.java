@@ -1,4 +1,4 @@
-package com.hiddenpeak.erp.dal.manager;
+package com.hiddenpeak.erp.dal.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

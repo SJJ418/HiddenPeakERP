@@ -67,18 +67,17 @@ public class ManagerController {
     log.info("Adding Inventory");
     log.info("got data: {}", data);
 
-    // TODO: add actual data fields
     JSONObject object = new JSONObject(data);
     int id = inventories.size() + 1;
-//    String customerFirstName = object.getString("customerFirstName");
-//    String customerLastName = object.getString("customerLastName");
-//    int cost = Integer.parseInt(object.getString("cost"));
-//    int quantity = Integer.parseInt(object.getString("quantity"));
-//    String date = object.getString("completionDate");
-//    String zip = object.getString("zip");
+    String itemName = object.getString("itemName");
+    int quantity = Integer.parseInt(object.getString("quantity"));
+    String category = object.getString("category");
+    double cost = Double.parseDouble(object.getString("cost"));
+    String vendorName = object.getString("vendorName");
+    String inventoryDate = object.getString("inventoryDate");
 
 
-    Inventory inventory = new Inventory(id, "Test Inventory", 5, "NEW", "testCategory", 10.00, "test Vendor");
+    Inventory inventory = new Inventory(id, itemName, quantity, "NEW", category, cost, vendorName, inventoryDate);
 
     inventories.add(inventory);
 

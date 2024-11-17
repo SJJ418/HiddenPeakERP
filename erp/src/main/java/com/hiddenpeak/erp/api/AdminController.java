@@ -1,10 +1,7 @@
 package com.hiddenpeak.erp.api;
 
 import com.hiddenpeak.erp.ProductionManager;
-import com.hiddenpeak.erp.dal.manager.DashboardData;
-import com.hiddenpeak.erp.dal.manager.DashboardStats;
-import com.hiddenpeak.erp.dal.manager.Inventory;
-import com.hiddenpeak.erp.dal.manager.Order;
+import com.hiddenpeak.erp.dal.admin.DashboardStats;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

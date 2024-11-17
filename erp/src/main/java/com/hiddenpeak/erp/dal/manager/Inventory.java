@@ -13,4 +13,5 @@ public class Inventory {
   String category;
   double cost;
   String vendor;
+  String inventoryDate;
 }
