@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finance Dashboard</title>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="managerDashboard.css">
+  <script src="finance.js" defer></script>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="logo.png" alt="Finance Logo" class="logo-img">
+      <h2>Finance Mgr</h2>
+    </div>
+    <ul class="menu">
+      <li id="homeLink" class="active"><span>🏠</span> Home</li>
+      <li id="invoicesLink"><span>📄</span> Invoices</li>
+      <li id="paymentsLink"><span>💳</span> Payments</li>
+      <li id="reportsLink"><span>📊</span> Reports</li>
+    </ul>
+    <div class="signout" id="signOut">
+        ⏻ Sign out
+      </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div id="loading" style="display: none;">Loading...</div>
+
+  <!-- Content Section -->
+  <div class="content">
+    <!-- Home Section -->
+    <div class="home-section active-section" id="homeSection">
+      <div class="top-section">
+        <div class="stat-box" id="totalInvoices">
+          <h1></h1>
+          <p>Total Invoices</p>
+        </div>
+        <div class="stat-box" id="pendingPayments">
+          <h1></h1>
+          <p>Pending Payments</p>
+        </div>
+        <div class="stat-box" id="completedPayments">
+          <h1></h1>
+          <p>Completed Payments</p>
+        </div>
+      </div>
+
+      <div class="grid-container">
+        <div class="stat-summary">
+          <h4>Monthly Summary</h4>
+          <ul id="summaryList"></ul>
+        </div>
+        <div class="stat-summary">
+          <h4>Invoices Snapshot</h4>
+          <ul id="invoiceSnapshotList"></ul>
+        </div>
+        <div class="stat-summary">
+          <h4>Payment Status</h4>
+          <ul id="paymentStatusList"></ul>
+        </div>
+        <div class="stat-summary">
+          <h4>Finance Reports</h4>
+          <ul id="financeReportsList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="signOutModal" class="outModal">
+        <div class="outModal-content">
+          <span class="outModal-close">&times;</span>
+          <h2 class="outModal-title">Sign out?</h2>
+          <p class="outModal-message">Are you sure you want to sign out?</p>
+          <div class="outModal-actions">
+            <button id="confirmSignOut" class="outModal-btn-primary">Yes, Sign Out</button>
+            <button id="cancelSignOut" class="outModal-btn-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>    
+
+    <!-- Invoices Section -->
+    <div class="invoices-section" id="invoicesSection" style="display: none;">
+      <div class="actions">
+        <button id="viewPaymentHistory">View Payment History</button>
+        <button id="sendReminder">Send Reminder</button>
+        <button id="exportInvoice">Export Invoice</button>
+        <button id="deleteInvoice">Delete Invoice</button>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" id="invoiceSearchInput" placeholder="Search Invoices">
+        <select id="invoiceStatusFilter">
+          <option value="">Status</option>
+          <option value="paid">Paid</option>
+          <option value="pending">Pending</option>
+          <option value="overdue">Overdue</option>
+        </select>
+        <select id="invoiceSorting">
+          <option value="">Sort by</option>
+          <option value="date">Date</option>
+          <option value="amount">Amount</option>
+          <option value="status">Status</option>
+        </select>
+      </div>
+
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="selectAllInvoices"></th>
+            <th>Invoice ID</th>
+            <th>Client</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Due Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="invoiceTableBody">
+          <!-- Populated by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- View Payment History Modal -->
+    <div id="paymentHistoryModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Payment History</h2>
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th>Payment ID</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Method</th>
+            </tr>
+          </thead>
+          <tbody id="paymentHistoryBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Send Reminder Modal -->
+    <div id="sendReminderModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Send Reminder</h2>
+        <p>Are you sure you want to send a payment reminder for <strong>Invoice ID #<span id="reminderInvoiceId"></span></strong>?</p>
+        <div class="modal-actions">
+          <button id="confirmSendReminder" class="btn-primary">Send Reminder</button>
+          <button class="btn-cancel close">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Invoice Modal -->
+    <div id="exportInvoiceModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Export Invoice</h2>
+        <p>Choose how you want to export Invoice ID #<span id="exportInvoiceId"></span>:</p>
+        <div class="export-options">
+          <button id="downloadPdf" class="btn-primary">Download as PDF</button>
+          <button id="emailInvoice" class="btn-secondary">Email to Client</button>
+          <button id="generateLink" class="btn-secondary">Generate Shareable Link</button>
+        </div>
+      </div>
+    </div>
+
+<!-- Payments Section -->
+<div class="payments-section" id="paymentsSection" style="display: none;">
+    <div class="actions">
+      <button id="markReconciled">Mark as Reconciled</button>
+      <button id="refundPayment">Refund Payment</button>
+      <button id="generateReceipt">Generate Receipt</button>
+      <button id="deletePayment">Delete Payment</button>
+    </div>
+  
+    <div class="search-bar">
+      <input type="text" id="paymentSearchInput" placeholder="Search Payments">
+      <select id="paymentStatusFilter">
+        <option value="">Status</option>
+        <option value="completed">Completed</option>
+        <option value="pending">Pending</option>
+        <option value="reconciled">Reconciled</option>
+        <option value="refunded">Refunded</option>
+      </select>
+      <select id="paymentSorting">
+        <option value="">Sort by</option>
+        <option value="date">Date</option>
+        <option value="amount">Amount</option>
+        <option value="status">Status</option>
+      </select>
+    </div>
+  
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="selectAllPayments"></th>
+          <th>Payment ID</th>
+          <th>Invoice ID</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="paymentTableBody">
+        <!-- Populated by JavaScript -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Mark as Reconciled Modal -->
+  <div id="markReconciledModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Mark Payment as Reconciled</h2>
+      <p>Are you sure you want to mark Payment ID #<span id="reconciledPaymentId"></span> as reconciled?</p>
+      <div class="modal-actions">
+        <button id="confirmReconcile" class="btn-primary">Mark as Reconciled</button>
+        <button class="btn-cancel close">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Refund Payment Modal -->
+  <div id="refundPaymentModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Refund Payment</h2>
+      <form id="refundPaymentForm">
+        <div class="form-group">
+          <label for="refundReason">Reason for Refund</label>
+          <textarea id="refundReason" placeholder="Enter refund reason" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="refundAmount">Refund Amount</label>
+          <input type="number" id="refundAmount" placeholder="Enter refund amount" required>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary">Process Refund</button>
+          <button type="button" class="btn-cancel close">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Generate Receipt Modal -->
+  <div id="generateReceiptModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Generate Payment Receipt</h2>
+      <p>Select how you want to generate the receipt for Payment ID #<span id="receiptPaymentId"></span>:</p>
+      <div class="export-options">
+        <button id="downloadReceiptPdf" class="btn-primary">Download as PDF</button>
+        <button id="emailReceipt" class="btn-secondary">Email to Client</button>
+        <button id="shareReceiptLink" class="btn-secondary">Generate Shareable Link</button>
+      </div>
+    </div>
+  </div>
+  
+<!-- Reports Section -->
+<div class="reports-section" id="reportsSection" style="display: none;">
+    <div class="actions">
+      <button id="downloadReport">Download Report</button>
+      <button id="emailReport">Email Report</button>
+      <button id="viewReportSummary">View Report Summary</button>
+    </div>
+  
+    <div class="search-bar">
+      <input type="text" id="reportSearchInput" placeholder="Search Reports">
+      <select id="reportTypeFilter">
+        <option value="">Filter by Type</option>
+        <option value="payments">Payments</option>
+        <option value="invoices">Invoices</option>
+        <option value="summary">Summary</option>
+      </select>
+      <select id="reportSorting">
+        <option value="">Sort by</option>
+        <option value="date">Date</option>
+        <option value="amount">Amount</option>
+        <option value="type">Type</option>
+      </select>
+    </div>
+  
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="selectAllReports"></th>
+          <th>Report ID</th>
+          <th>Type</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="reportTableBody">
+        <!-- Populated dynamically by JavaScript -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Download Report Modal -->
+  <div id="downloadReportModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Download Report</h2>
+      <form id="downloadReportForm">
+        <div class="form-group">
+          <label for="reportType">Report Type</label>
+          <select id="reportType" required>
+            <option value="">Select Report Type</option>
+            <option value="payments">Payments Report</option>
+            <option value="invoices">Invoices Report</option>
+            <option value="summary">Summary Report</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="reportFormat">Format</label>
+          <select id="reportFormat" required>
+            <option value="">Select Format</option>
+            <option value="pdf">PDF</option>
+            <option value="excel">Excel</option>
+            <option value="csv">CSV</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary">Download</button>
+          <button type="button" class="btn-cancel close">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Email Report Modal -->
+  <div id="emailReportModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Email Report</h2>
+      <form id="emailReportForm">
+        <div class="form-group">
+          <label for="recipientEmail">Recipient Email</label>
+          <input type="email" id="recipientEmail" placeholder="Enter recipient's email" required>
+        </div>
+        <div class="form-group">
+          <label for="emailMessage">Message</label>
+          <textarea id="emailMessage" placeholder="Add a message (optional)"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary">Send Email</button>
+          <button type="button" class="btn-cancel close">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- View Report Summary Modal -->
+  <div id="viewReportSummaryModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Report Summary</h2>
+      <div class="summary-content">
+        <p><strong>Total Payments:</strong> $0.00</p>
+        <p><strong>Pending Invoices:</strong> $0.00</p>
+        <p><strong>Refunds Processed:</strong> $0.00</p>
+        <p><strong>Total Transactions:</strong> 0</p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-primary close">Close</button>
+      </div>
+    </div>
+  </div>
+  
+  </div>
+</body>
+</html>
