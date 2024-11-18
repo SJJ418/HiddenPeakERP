@@ -1,11 +1,11 @@
 package com.hiddenpeak.erp.api;
 
+import com.hiddenpeak.erp.AdminManager;
 import com.hiddenpeak.erp.dal.login.User;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class LoginController {
 
-  List<User> createdUsers = new ArrayList<>();
+  @Autowired
+  private AdminManager adminManager;
 
   @PostMapping("/createAccount")
   public ResponseEntity createAccount(@RequestBody String body) {
@@ -28,7 +29,7 @@ public class LoginController {
     String userId = object.getString("userId");
     String password = object.getString("password");
     String role = object.getString("role");
-    createdUsers.add(new User(userId, password, role));
+    adminManager.addUser(new User(userId, password, role));
 
     return new ResponseEntity(HttpStatus.OK);
   }
@@ -40,8 +41,9 @@ public class LoginController {
 
     JSONObject object = new JSONObject(body);
     String userId = object.getString("userId");
+    String password = object.getString("password");
 
-    Optional<User> userOpt = createdUsers.stream().filter(user -> user.getUserId().equals(userId)).findFirst();
+    Optional<User> userOpt = adminManager.getUser(userId, password);
 
     if (userOpt.isPresent()) {
       log.info("user found!");

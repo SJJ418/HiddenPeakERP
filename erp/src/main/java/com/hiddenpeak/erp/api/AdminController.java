@@ -26,27 +26,6 @@ public class AdminController {
     log.info("Retrieving Dashboard Stats");
     return ResponseEntity.ok(new DashboardStats(1, 2, 3));
   }
-//
-//  @GetMapping("/api/orders")
-//  public ResponseEntity getOrders() {
-//    log.info("Retrieving Orders");
-//    List<Order> orders = new ArrayList<>();
-//    Order order1 = new Order(1, "Test Order", 5, "NEW", "testCategory", 5.00, "test Vendor");
-//    Order order2 = new Order(2, "Test Order", 6, "NEW", "testCategory", 15.00, "test Vendor");
-//    orders.add(order1);
-//    orders.add(order2);
-//    return ResponseEntity.ok(orders);
-//  }
-//
-//  @GetMapping("/api/inventory")
-//  public ResponseEntity getInventory() {
-//    log.info("Retrieving Inventory");
-//    List<Inventory> inventories = new ArrayList<>();
-//    Inventory inventory1 = new Inventory(1, "Test Inventory", 5, "NEW", "testCategory", 10.00, "test Vendor");
-//    Inventory inventory2 = new Inventory(2, "Test Inventory", 6, "NEW", "testCategory", 20.00, "test Vendor");
-//    inventories.add(inventory1);
-//    inventories.add(inventory2);
-//    return ResponseEntity.ok(inventories);
-//  }
+
 }
 
