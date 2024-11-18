@@ -130,12 +130,10 @@ class ModalManager {
     // Redirects the user to the appropriate dashboard based on their role
     redirectUser(userRole) {
         const roleToURL = {
-            Vendor: 'vendor-dashboard.html',
-            OpsManager: 'opsmanager-dashboard.html',
-            Warehouse: 'warehouse-dashboard.html',
-            Finance: 'finance-dashboard.html',
-            StoreOwner: 'storeowner-dashboard.html',
-            serviceStaff: 'servicestaff-dashboard.html'
+            Admin: 'adminDashboard.html',
+            OpsManager: 'managerDashboard.html',
+            Production: 'production.html',
+            Finance: 'finance.html',
         };
 
         // Get the URL for the user's role or default to 'support.html'
