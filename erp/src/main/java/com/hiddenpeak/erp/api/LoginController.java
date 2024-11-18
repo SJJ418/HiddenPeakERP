@@ -1,7 +1,9 @@
 package com.hiddenpeak.erp.api;
 
+import com.hiddenpeak.erp.dal.login.User;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -16,14 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class LoginController {
 
-  List<String> createdUsers = new ArrayList<>();
+  List<User> createdUsers = new ArrayList<>();
 
   @PostMapping("/createAccount")
   public ResponseEntity createAccount(@RequestBody String body) {
     log.info("Got a createAccount request with body: {}", body);
 
     JSONObject object = new JSONObject(body);
-    createdUsers.add(object.getString("userId"));
+    String userId = object.getString("userId");
+    String password = object.getString("password");
+    String role = object.getString("role");
+    createdUsers.add(new User(userId, password, role));
 
     return new ResponseEntity(HttpStatus.OK);
   }
@@ -34,10 +39,15 @@ public class LoginController {
     log.info("Got a login request with body: {}", body);
 
     JSONObject object = new JSONObject(body);
-    if (createdUsers.contains(object.getString("userId"))) {
-      log.error("User found");
-      return new ResponseEntity(HttpStatus.OK);
+    String userId = object.getString("userId");
+
+    Optional<User> userOpt = createdUsers.stream().filter(user -> user.getUserId().equals(userId)).findFirst();
+
+    if (userOpt.isPresent()) {
+      log.info("user found!");
+      return ResponseEntity.ok(userOpt.get());
     } else {
+
       log.error("User not found");
       return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
