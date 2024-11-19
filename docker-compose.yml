@@ -1,12 +1,12 @@
 services:
 
   erp:
-    image: erp:latest
+    image: ghcr.io/stchiang/erp:20241119
     ports:
       - 8080:8080
 
   erp-frontend:
-    image: frontend:latest
+    image: ghcr.io/stchiang/frontend:20241119
     ports: 
       - 8000:80
 
