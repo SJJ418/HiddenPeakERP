@@ -271,6 +271,6 @@ class AdminDashboard {
 
 // Initialize the Admin Dashboard when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  const apiUrl = 'http://localhost:8000/api'; // Back-end: API URL
+  const apiUrl = 'http://localhost:8080/api'; // Back-end: API URL
   new AdminDashboard(apiUrl);
 });

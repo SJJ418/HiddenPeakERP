@@ -73,7 +73,7 @@ class ModalManager {
         });
 
         // Send form data to the server using the fetch API
-        fetch('http://localhost:9000/createAccount', {
+        fetch('http://localhost:8080/createAccount', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -106,7 +106,7 @@ class ModalManager {
         });
 
         // Send login data to the server using the fetch API
-        fetch('http://localhost:9000/login', {
+        fetch('http://localhost:8080/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -116,7 +116,7 @@ class ModalManager {
        .then(response => {
             if (response.status == 200) {
                this.showAlert('Login successful!', false);  // Show success message
-                //this.redirectUser(data.role);  // Redirect the user based on their role
+                this.redirectUser(data.role);  // Redirect the user based on their role
             } else {
                 this.showAlert('Error signing in: ' + data.message);  // Show error message
             }

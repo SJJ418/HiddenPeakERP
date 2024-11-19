@@ -3,9 +3,10 @@ services:
   erp:
     image: erp:latest
     ports:
-      - 9000:8080
+      - 8080:8080
 
   erp-frontend:
     image: frontend:latest
     ports: 
       - 8000:80
+
