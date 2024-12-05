@@ -2,6 +2,8 @@ package com.hiddenpeak.erp.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -12,27 +14,24 @@ public class Customer {
 
     private String customerName;
 
-    public Integer getId() {
-        return id;
+    public Customer(Integer id, String name) {
+        this.customerId = id;
+        this.customerName = name;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Integer getCustomerId() {
+        return customerId;
     }
 
-    public String getName() {
-        return name;
+    public void setCustomerId(Integer id) {
+        this.customerId = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCustomerName(String name) {
+        this.customerName = name;
     }
 }

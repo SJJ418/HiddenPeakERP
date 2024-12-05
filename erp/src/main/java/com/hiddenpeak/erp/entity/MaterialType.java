@@ -2,6 +2,8 @@ package com.hiddenpeak.erp.entity;
 
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "materialType")
 public class MaterialType {
@@ -12,27 +14,24 @@ public class MaterialType {
 
     private String materialTypeDescription;
 
-    public Integer getId() {
-        return id;
+    public MaterialType(Integer id, String description) {
+        this.materialTypeId = id;
+        this.materialTypeDescription = description;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Integer getMaterialTypeId() {
+        return materialTypeId;
     }
 
-    public String getName() {
-        return name;
+    public void setMaterialTypeId(Integer id) {
+        this.materialTypeId = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getMaterialTypeDescription() {
+        return materialTypeDescription;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMaterialTypeDescription(String description) {
+        this.materialTypeDescription = description;
     }
 }

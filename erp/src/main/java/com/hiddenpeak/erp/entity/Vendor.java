@@ -12,6 +12,11 @@ public class Vendor {
 
     private String vendorName;
 
+    public Vendor(Integer id, String name) {
+        this.vendorId = id;
+        this.vendorName = name;
+    }
+
     public Integer getVendorId() {
         return vendorId;
     }

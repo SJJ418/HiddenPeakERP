@@ -2,6 +2,9 @@ package com.hiddenpeak.erp.entity;
 
 import jakarta.persistence.*;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "order")
 public class Order {
@@ -18,48 +21,40 @@ public class Order {
     @JoinColumn(name = "materialId")
     private Material material;
 
-    private java.sql.Timestamp orderDate;
+    private Timestamp orderDate;
 
-    private java.sql.Timestamp dueDate;
+    private Timestamp dueDate;
 
-    public Integer getId() {
+    public Order(Integer id, Customer cId, Material mId, Timestamp oDate, Timestamp dDate) {
+        this.orderId = id;
+        this.customer = cId;
+        this.material = mId;
+        this.orderDate = oDate;
+        this.dueDate = dDate;
+    }
+
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setId(Integer id) {
+    public void setOrderId(Integer id) {
         this.orderId = id;
     }
 
-    public String getName() {
-        return customerId;
-    }
-
-    public void setName(String name) {
-        this.customerId = name;
-    }
-
-    public String getMaterialId() {
-        return materialId;
-    }
-
-    public void setMaterialId(String materialId) {
-        this.materialId = materialId;
-    }
-
-    public String getMaterialId() {
+    public Timestamp getOrderDate() {
         return orderDate;
     }
 
-    public void setMaterialId(String materialId) {
-        this.orderDate = orderDate;
+    public void setMaterialId(Timestamp oDate) {
+        this.orderDate = oDate;
     }
 
-    public String getMaterialId() {
+    public Timestamp getMaterialId() {
         return dueDate;
     }
 
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
+    public void setDueDate(Timestamp dDate) {
+        this.dueDate = dDate;
     }
 }
 

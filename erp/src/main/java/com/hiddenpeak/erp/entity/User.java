@@ -14,31 +14,27 @@ public class User {
 
     @OneToOne
     @JoinColumn(name = "permissionId")
-    private Permission permissionId;
+    private Permission permission;
 
-    public Integer getId() {
-        return orderId;
+    public User(String id, String password, Permission pId) {
+        this.userId = id;
+        this.userPassword = password;
+        this.permission = pId;
     }
 
-    public void setId(Integer id) {
-        this.orderId = userId;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getName() {
-        return customerId;
+    public void setUserId(String id) {
+        this.userId = id;
     }
 
-    public void setName(String name) {
-        this.customerId = name;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public String getMaterialId() {
-        return materialId;
+    public void setUserPassword(String password) {
+        this.userPassword = password;
     }
-
-    public void setMaterialId(String materialId) {
-        this.materialId = materialId;
-    }
-
-
 }

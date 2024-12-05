@@ -2,6 +2,9 @@ package com.hiddenpeak.erp.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 @Entity
 @Table(name = "billOfMaterial")
 public class BillOfMaterials {
@@ -16,9 +19,16 @@ public class BillOfMaterials {
 
     @OneToMany
     @JoinColumn(name = "materialId")
-    private Material componentMaterial;
+    private List<Material> componentMaterial;
 
     private Integer billOfMaterialQty;
+
+    public BillOfMaterials(Integer id, Material mId, List<Material> compId , Integer qty) {
+        this.billOfMaterialId = id;
+        this.material = mId;
+        this.componentMaterial = compId;
+        this.billOfMaterialQty = qty;
+    }
 
     public Integer getBillOfMaterialId() {
         return billOfMaterialId;

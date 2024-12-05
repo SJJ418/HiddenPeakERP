@@ -3,6 +3,7 @@ package com.hiddenpeak.erp.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "material")
@@ -26,28 +27,44 @@ public class Material {
 
     private BigDecimal materialValue;
 
+    public Material(Integer id, MaterialType mType, Vendor vId, String description, BigDecimal cost, BigDecimal value) {
+        this.materialId = id;
+        this.materialType = mType;
+        this.vendor = vId;
+        this.materialDescription = description;
+        this.materialCost = cost;
+        this.materialValue = value;
+    }
 
-    public static Integer getId() {
+    public Integer getMaterialId() {
         return materialId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setMaterialId(Integer id) {
+        this.materialId = id;
     }
 
-    public String getName() {
-        return name;
+    public String getMaterialDescription() {
+        return materialDescription;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMaterialDescriptionName(String description) {
+        this.materialDescription = description;
     }
 
-    public String getEmail() {
-        return email;
+    public BigDecimal getMaterialCost() {
+        return materialCost;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMaterialCost(BigDecimal cost) {
+        this.materialCost = cost;
+    }
+
+    public BigDecimal getMaterialValue() {
+        return materialValue;
+    }
+
+    public void setMaterialValue(BigDecimal value) {
+        this.materialValue = value;
     }
 }

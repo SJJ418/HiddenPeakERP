@@ -17,29 +17,24 @@ public class Permission {
 
     private String permissionDescription;
 
-    private String email;
+    public Permission(Integer id, String description) {
+        this.permissionId = id;
+        this.permissionDescription = description;
+    }
 
-    public Integer getId() {
+    public Integer getPermissionId() {
         return permissionId;
     }
 
-    public void setId(Integer id) {
+    public void setPermissionId(Integer id) {
         this.permissionId = id;
     }
 
-    public String getName() {
-        return name;
+    public String getPermissionDescription() {
+        return permissionDescription;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPermissionDescription(String description) {
+        this.permissionDescription = description;
     }
 }
