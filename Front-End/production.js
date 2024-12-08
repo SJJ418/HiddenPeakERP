@@ -102,7 +102,7 @@ initEvents() {
     loadInitialData() {
         this.fetchDashboardData();
         this.loadTableData('production');
-        //this.loadTableData('shipping');
+        this.loadTableData('shipping');
     }
 
     // Fetch and display dashboard data

@@ -50,7 +50,7 @@ public class ProductionController {
     return new ResponseEntity(HttpStatus.OK);
   }
 
-  @GetMapping("/api/completed")
+  @GetMapping("/api/orders/completed")
   public ResponseEntity getCompletedOrders() {
     log.info("Retrieving Completed Orders");
     return ResponseEntity.ok(productionManager.getCompletedOrders());
