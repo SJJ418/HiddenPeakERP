@@ -1,4 +1,4 @@
-package com.hiddenpeak.erp.entity;
+package com.hiddenpeak.erp.dal;
 
 import jakarta.persistence.*;
 
@@ -26,17 +26,24 @@ public class PurchaseOrder {
 
     private String status;
 
+    private Integer cost;
+
     String zip;
 
-    public PurchaseOrder(Integer id, String customerName, Integer quantity, String completionDate, String zip) {
+    public PurchaseOrder(Integer id, String customerName, Integer quantity, String completionDate, Integer cost, String zip) {
         this.orderId = id;
         this.customerName = customerName;
         this.quantity = quantity;
         this.dueDate = completionDate;
+        this.cost = cost;
         this.zip = zip;
+
+        // order date is today
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         this.orderDate = formatter.format(date);
+
+        // initial order status is PENDING
         this.status = "PENDING";
     }
 }

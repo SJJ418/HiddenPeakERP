@@ -1,6 +1,8 @@
 package com.hiddenpeak.erp;
 
-import com.hiddenpeak.erp.entity.PurchaseOrder;
+import com.hiddenpeak.erp.dal.PurchaseOrder;
+import com.hiddenpeak.erp.dal.User;
+import com.hiddenpeak.erp.dal.manager.DashboardData;
 import com.hiddenpeak.erp.repository.PurchaseOrderRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +19,19 @@ public class ProductionManager {
     purchaseOrderRepository.save(purchaseOrder);
   }
 
-  public List<PurchaseOrder> getOrders() {
+  /**
+   * Query the database for all Orders
+   * @return a List of all orders in the database
+   */
+  public List<PurchaseOrder> getAllOrders() {
     List<PurchaseOrder> purchaseOrders = new ArrayList<>();
     purchaseOrderRepository.findAll().forEach(purchaseOrders::add);
     return purchaseOrders;
   }
+
+  public DashboardData getDashboardData() {
+    return new DashboardData(getAllOrders().size(), 0, 0);
+  }
+
+
 }

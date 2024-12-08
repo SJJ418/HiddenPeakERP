@@ -1,8 +1,7 @@
-package com.hiddenpeak.erp.entity;
+package com.hiddenpeak.erp.dal;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity

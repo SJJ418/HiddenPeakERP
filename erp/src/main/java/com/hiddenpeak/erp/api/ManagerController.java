@@ -1,10 +1,8 @@
 package com.hiddenpeak.erp.api;
 
 import com.hiddenpeak.erp.ProductionManager;
-import com.hiddenpeak.erp.dal.manager.DashboardData;
 import com.hiddenpeak.erp.dal.manager.Inventory;
-import com.hiddenpeak.erp.dal.manager.Order;
-import com.hiddenpeak.erp.entity.PurchaseOrder;
+import com.hiddenpeak.erp.dal.PurchaseOrder;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +24,12 @@ public class ManagerController {
   @Autowired
   ProductionManager productionManager;
 
-  List<Order> orders = new ArrayList<>();
-
   List<Inventory> inventories = new ArrayList<>();
 
   @GetMapping("/api/dashboard-data")
   public ResponseEntity getDashboardData() {
     log.info("Retrieving Dashboard Data");
-    return ResponseEntity.ok(new DashboardData(5, 10, 6));
+    return ResponseEntity.ok(productionManager.getDashboardData());
   }
 
   @PostMapping("/api/addOrder")
@@ -42,7 +38,7 @@ public class ManagerController {
 
     JSONObject object = new JSONObject(data);
 
-    int id = orders.size() + 1;
+    int id = Integer.parseInt(object.getString("productId"));
     String customerFirstName = object.getString("customerFirstName");
     String customerLastName = object.getString("customerLastName");
     int cost = Integer.parseInt(object.getString("cost"));
@@ -50,8 +46,7 @@ public class ManagerController {
     String date = object.getString("completionDate");
     String zip = object.getString("zip");
 
-    PurchaseOrder purchaseOrder = new PurchaseOrder(id, customerFirstName + " " + customerLastName, quantity, date, zip);
-//    Order order = new Order(id, customerFirstName + " " + customerLastName, cost, "PENDING", quantity, date, zip);
+    PurchaseOrder purchaseOrder = new PurchaseOrder(id, customerFirstName + " " + customerLastName, quantity, date, cost, zip);
 
     productionManager.submitOrder(purchaseOrder);
     return new ResponseEntity(HttpStatus.OK);
@@ -60,7 +55,7 @@ public class ManagerController {
   @GetMapping("/api/orders")
   public ResponseEntity getOrders() {
     log.info("Retrieving Orders");
-    return ResponseEntity.ok(productionManager.getOrders());
+    return ResponseEntity.ok(productionManager.getAllOrders());
   }
 
   @PostMapping("/api/addInventory")

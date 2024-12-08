@@ -1,8 +1,6 @@
-package com.hiddenpeak.erp.entity;
+package com.hiddenpeak.erp.dal;
 
 import jakarta.persistence.*;
-
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "inventory")

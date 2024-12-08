@@ -1,7 +1,7 @@
 package com.hiddenpeak.erp.api;
 
 import com.hiddenpeak.erp.AdminManager;
-import com.hiddenpeak.erp.entity.User;
+import com.hiddenpeak.erp.dal.User;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;

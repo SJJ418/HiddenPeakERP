@@ -1,7 +1,7 @@
 package com.hiddenpeak.erp;
 
 import com.hiddenpeak.erp.dal.admin.DashboardStats;
-import com.hiddenpeak.erp.entity.User;
+import com.hiddenpeak.erp.dal.User;
 import com.hiddenpeak.erp.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,18 +33,24 @@ UserRepository userRepository;
    * @return
    */
   public Optional<User> getUser(String userId, String password) {
-    List<User> createdUsers = new ArrayList<>();
-    userRepository.findAll().forEach(createdUsers::add);
-    return createdUsers.stream()
+    return getAllUsers().stream()
         .filter(user ->
             (user.getUserId().equals(userId) && user.getUserPassword().equals(password))
         ).findFirst();
   }
 
   public DashboardStats getDashboardStats() {
+    return new DashboardStats(getAllUsers().size(), 1, getAllUsers().size());
+  }
+
+  /**
+   * Query the database for all Users
+   * @return a List of all users in the database
+   */
+  private List<User> getAllUsers() {
     List<User> createdUsers = new ArrayList<>();
     userRepository.findAll().forEach(createdUsers::add);
-    return new DashboardStats(createdUsers.size(), 1, createdUsers.size());
+    return createdUsers;
   }
 
 }

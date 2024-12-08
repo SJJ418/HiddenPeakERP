@@ -1,4 +1,4 @@
-package com.hiddenpeak.erp.entity;
+package com.hiddenpeak.erp.dal;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
