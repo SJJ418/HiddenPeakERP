@@ -49,34 +49,42 @@ class ProductionDashboard {
         };
     }
 
-    // Initialize event listeners
-    initEvents() {
-        // Navigation links
-        Object.entries(this.sections).forEach(([linkId, sectionId]) => {
-            document.getElementById(linkId)?.addEventListener("click", () => this.switchSection(sectionId, linkId));
-        });
+// Initialize event listeners
+initEvents() {
+    // Navigation links for switching sections
+    Object.entries(this.sections).forEach(([linkId, sectionId]) => {
+        document.getElementById(linkId)?.addEventListener("click", () => this.switchSection(sectionId, linkId));
+    });
 
-        // Sign-out button
-        this.buttons.signOut?.addEventListener("click", () => this.signOut());
+    // Sign-out button and confirmation modal
+    this.buttons.signOut?.addEventListener("click", () => this.signOut());
 
-        // Form submissions
-        this.forms.processOrder?.addEventListener("submit", (e) => this.submitOrder(e, 'process'));
-        this.forms.editOrder?.addEventListener("submit", (e) => this.submitOrder(e, 'edit'));
-        this.forms.delayOrder?.addEventListener("submit", (e) => this.submitOrder(e, 'delay'));
+    // Form submissions for various actions (process, edit, delay orders)
+    this.forms?.processOrder?.addEventListener("submit", (e) => this.submitOrder(e, 'process'));
+    this.forms?.editOrder?.addEventListener("submit", (e) => this.submitOrder(e, 'edit'));
+    this.forms?.delayOrder?.addEventListener("submit", (e) => this.submitOrder(e, 'delay'));
 
-        // Shipping section buttons
-        this.buttons.shipOrder?.addEventListener("click", () => this.openModal('shippingLabel', 'completed'));
-        this.buttons.editShipping?.addEventListener("click", () => this.openModal('editShipping'));
-        this.buttons.cancelShipping?.addEventListener("click", () => this.openModal('cancelShipping'));
-        this.buttons.tracking?.addEventListener("click", () => this.trackOrder());
+    // Shipping section buttons
+    this.buttons.shipOrder?.addEventListener("click", () => this.openModal('shippingLabel', 'completed')); // Open shipping label modal
+    this.buttons.editShipping?.addEventListener("click", () => this.openModal('editShipping')); // Edit shipping modal
+    this.buttons.cancelShipping?.addEventListener("click", () => this.openModal('cancelShipping')); // Cancel shipping modal
+    this.buttons.tracking?.addEventListener("click", () => this.trackOrder()); // Tracking information
 
-        // Production section buttons
-        this.buttons.processOrder?.addEventListener("click", () => this.openModal('processOrder', 'pending'));
-        this.buttons.editOrder?.addEventListener("click", () => this.openModal('editOrder'));
-        this.buttons.cancelOrder?.addEventListener("click", () => this.openModal('cancelOrder'));
-        this.buttons.delayOrder?.addEventListener("click", () => this.openModal('delayOrder', 'in_progress'));
-        this.buttons.completeOrder?.addEventListener("click", () => this.completeOrder());
-    }
+    // Production section buttons
+    this.buttons.processOrder?.addEventListener("click", () => this.openModal('processOrder', 'pending')); // Open Process Order modal
+    this.buttons.editOrder?.addEventListener("click", () => this.openModal('editOrder')); // Open Edit Order modal
+    this.buttons.cancelOrder?.addEventListener("click", () => this.openModal('cancelOrder')); // Open Cancel Order modal
+    this.buttons.delayOrder?.addEventListener("click", () => this.openModal('delayOrder', 'in_progress')); // Open Delay Order modal
+    this.buttons.completeOrder?.addEventListener("click", () => this.openModal('completeOrder', 'in_progress')); // Open Complete Order modal
+
+    // Confirm Complete Order action in the modal
+    document.getElementById("confirmCompleteOrder")?.addEventListener("click", () => this.completeOrder());
+
+    // Close button for Complete Order modal
+    document.querySelector("#completeOrderModal .close")?.addEventListener("click", () => {
+        this.modals.completeOrder.style.display = "none"; // Hide modal when close button is clicked
+    });
+}
 
     // Fetch data from the API
     async fetchData(endpoint) {
@@ -177,34 +185,36 @@ class ProductionDashboard {
         }
     }
 
-    // Populate production or shipping table
-    populateTable(tableBody, orders, type) {
-        tableBody.innerHTML = "";
-        orders.forEach(order => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td><input type="checkbox" data-id="${order.id}"></td>
-                <td>${order.orderId}</td>
-                <td>${order.product}</td>
-                <td>${order.quantity}</td>
-                <td>${order.status}</td>
-                <td>${type === 'production' ? order.orderDate : order.shippingDate || "-"}</td>
-                <td>${type === 'production' ? order.dueDate : order.estimatedArrival || "-"}</td>
-                <td>${order.priority}</td>
-            `;
-            tableBody.appendChild(row);
-        });
-    }
+// Populate production table with order data
+populateTable(tableBody, orders) {
+    tableBody.innerHTML = ""; // Clear the table body before populating new data
+    orders.forEach(order => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td><input type="checkbox" data-id="${order.id}"></td>
+            <td>${order.orderId}</td>
+            <td>${order.product}</td>
+            <td>${order.quantity}</td>
+            <td>${order.status}</td>
+            <td>${order.orderDate || "-"}</td>
+            <td>${order.dueDate || "-"}</td>
+            <td>${order.priority}</td>
+        `;
+        tableBody.appendChild(row); // Add the row to the table
+    });
+}
 
-    // Open modals based on action
-    openModal(modalName, status = null) {
-        this.selectedOrderId = this.getSelectedOrderId(status);
-        if (this.selectedOrderId) {
-            this.modals[modalName].style.display = "flex";
-        } else {
-            alert(`Please select an order with status: ${status || 'any'}.`);
-        }
+
+// Open a modal for a specific action
+openModal(modalName, status = null) {
+    this.selectedOrderId = this.getSelectedOrderId(status); // Get the selected order ID
+    if (this.selectedOrderId) {
+        this.modals[modalName].style.display = "flex"; // Show the modal
+    } else {
+        alert(`Please select an order with status: ${status || 'any'}.`);
     }
+}
+
 
     // Submit order changes based on form type
     async submitOrder(event, actionType) {
@@ -248,46 +258,61 @@ class ProductionDashboard {
     }
     
 
-    // Complete a selected order
-    async completeOrder() {
-        try {
-            const response = await fetch(`${this.apiUrl}/orders/complete`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: this.selectedOrderId }),
-            });
-            if (response.ok) {
-                alert("Order marked as completed.");
-                this.modals.completeOrder.style.display = "none";
-                this.loadTableData('production');
-            } else {
-                alert("Failed to complete order.");
-            }
-        } catch (error) {
-            console.error("Error completing order:", error);
+// Complete a selected order
+async completeOrder() {
+    this.selectedOrderId = this.getSelectedOrderId("in_progress"); // Ensure the selected order has "in_progress" status
+    if (!this.selectedOrderId) {
+        alert("No valid order selected for completion.");
+        return; // Exit if no valid order is selected
+    }
+
+    try {
+        const response = await fetch(`${this.apiUrl}/orders/complete`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: this.selectedOrderId }), // Send selected order ID in the payload
+        });
+
+        if (response.ok) {
+            alert("Order marked as completed.");
+            this.modals.completeOrder.style.display = "none"; // Close the modal after success
+            this.loadTableData('production'); // Reload production table data
+        } else {
+            alert("Failed to complete order.");
+        }
+    } catch (error) {
+        console.error("Error completing order:", error);
+    }
+}
+
+
+// Utility to get the selected order ID with optional status filtering
+getSelectedOrderId(status = null) {
+    const checkboxes = Array.from(document.querySelectorAll('#productionTableBody input[type="checkbox"]:checked'));
+
+    if (checkboxes.length === 1) {
+        const orderId = checkboxes[0].dataset.id; // Retrieve order ID from data-id attribute
+        const orderRow = checkboxes[0].closest("tr"); // Find the associated row
+        const orderStatus = orderRow.cells[4].textContent.trim().toLowerCase(); // Get the status column text
+
+        // Validate status if provided
+        if (!status || orderStatus === status.toLowerCase()) {
+            return orderId; // Return the valid order ID
+        } else {
+            alert(`Please select an order with status: ${status}.`);
+            return null;
         }
     }
 
-    // Utility to get selected order ID with optional status filter
-    getSelectedOrderId(status = null) {
-        const checkboxes = Array.from(document.querySelectorAll('#productionTableBody input[type="checkbox"]:checked'));
-        if (checkboxes.length === 1) {
-            const orderId = checkboxes[0].dataset.id;
-            const orderRow = checkboxes[0].closest("tr");
-            const orderStatus = orderRow.cells[4].textContent.toLowerCase();
-            if (!status || orderStatus === status) {
-                return orderId;
-            } else {
-                alert(`Please select an order with status: ${status}.`);
-                return null;
-            }
-        } else if (checkboxes.length > 1) {
-            alert("Please select only one order at a time.");
-        } else {
-            alert("Please select an order.");
-        }
-        return null;
+    // Handle invalid selection cases
+    if (checkboxes.length > 1) {
+        alert("Please select only one order at a time.");
+    } else {
+        alert("Please select an order.");
     }
+
+    return null; // Return null if no valid order is selected
+}
 }
 
 // Initialize Production Dashboard on page load
