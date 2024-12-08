@@ -65,7 +65,12 @@ initEvents() {
     this.forms?.delayOrder?.addEventListener("submit", (e) => this.submitOrder(e, 'delay'));
 
     // Shipping section buttons
-    this.buttons.shipOrder?.addEventListener("click", () => this.openModal('shippingLabel', 'completed')); // Open shipping label modal
+    this.buttons.shipOrder?.addEventListener("click", () => {
+        this.selectedOrderId = this.getSelectedOrderId("completed", "shippingTableBody");
+        if (this.selectedOrderId) {
+            this.openModal("shippingLabel", "completed");
+        }
+    });
     this.buttons.editShipping?.addEventListener("click", () => this.openModal('editShipping')); // Edit shipping modal
     this.buttons.cancelShipping?.addEventListener("click", () => this.openModal('cancelShipping')); // Cancel shipping modal
     this.buttons.tracking?.addEventListener("click", () => this.trackOrder()); // Tracking information
@@ -297,31 +302,30 @@ async completeOrder() {
 
 
 // Utility to get the selected order ID with optional status filtering
-getSelectedOrderId(status = null) {
-    const checkboxes = Array.from(document.querySelectorAll('#productionTableBody input[type="checkbox"]:checked'));
+getSelectedOrderId(status = null, tableBodyId = "productionTableBody") {
+    const tableBody = document.getElementById(tableBodyId);
+    const checkboxes = Array.from(tableBody.querySelectorAll('input[type="checkbox"]:checked'));
 
     if (checkboxes.length === 1) {
-        const orderRow = checkboxes[0].closest("tr"); // Find the associated row
-        const orderId = orderRow.cells[1].textContent.toLowerCase(); // Retrieve order ID from data-id attribute
-        const orderStatus = orderRow.cells[4].textContent.trim().toLowerCase(); // Get the status column text
+        const orderId = checkboxes[0].dataset.id;
+        const orderRow = checkboxes[0].closest("tr");
+        const orderStatus = orderRow.cells[4].textContent.trim().toLowerCase();
 
-        // Validate status if provided
         if (!status || orderStatus === status.toLowerCase()) {
-            return orderId; // Return the valid order ID
+            return orderId;
         } else {
             alert(`Please select an order with status: ${status}.`);
             return null;
         }
     }
 
-    // Handle invalid selection cases
     if (checkboxes.length > 1) {
         alert("Please select only one order at a time.");
     } else {
         alert("Please select an order.");
     }
 
-    return null; // Return null if no valid order is selected
+    return null;
 }
 }
 
