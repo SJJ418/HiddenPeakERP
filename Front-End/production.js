@@ -78,10 +78,36 @@ class ProductionDashboard {
         this.buttons.completeOrder?.addEventListener("click", () => this.completeOrder());
     }
 
+    // Fetch data from the API
+    async fetchData(endpoint) {
+        try {
+          const response = await fetch(`${this.apiUrl}${endpoint}`);
+          if (!response.ok) throw new Error(`Failed to fetch from ${endpoint}`);
+          return await response.json();
+        } catch (error) {
+          console.error('Fetch error:', error);
+          return null;
+        }
+    }
+
     // Load initial data
     loadInitialData() {
+        this.fetchDashboardData();
         this.loadTableData('production');
-        this.loadTableData('shipping');
+        //this.loadTableData('shipping');
+    }
+
+    // Fetch and display dashboard data
+    async fetchDashboardData() {
+        const data = await this.fetchData('/production-data');
+        if (data) this.updateDashboard(data);
+    }
+
+    // Update dashboard with data
+    updateDashboard(data) {
+        document.getElementById('pendingOrders').querySelector('h1').innerText = data.pendingOrders;
+        document.getElementById('inProductionOrders').querySelector('h1').innerText = data.ordersInProduction;
+        document.getElementById('completedOrders').querySelector('h1').innerText = data.completedOrders;
     }
 
     // Show the initial active section
