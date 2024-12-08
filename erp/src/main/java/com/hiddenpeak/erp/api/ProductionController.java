@@ -30,6 +30,25 @@ public class ProductionController {
     return ResponseEntity.ok(productionManager.getProductionData());
   }
 
+  @PostMapping("/api/orders/process")
+  public ResponseEntity processOrders(@RequestBody String data) {
+    log.info("Processing Production Order");
+    JSONObject object = new JSONObject(data);
+    int id = Integer.parseInt(object.getString("id"));
+    productionManager.updateOrderStatus(id, "IN PROGRESS");
+    return new ResponseEntity(HttpStatus.OK);
+  }
+
+  @PostMapping("/api/orders/complete")
+  public ResponseEntity completeOrder(@RequestBody String data) {
+    log.info("Completing Production Order");
+    log.info("data: {}", data);
+    JSONObject object = new JSONObject(data);
+    int id = Integer.parseInt(object.getString("id"));
+    productionManager.updateOrderStatus(id, "COMPLETED");
+    return new ResponseEntity(HttpStatus.OK);
+  }
+
 }
 
 

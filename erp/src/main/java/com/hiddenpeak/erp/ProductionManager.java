@@ -7,6 +7,7 @@ import com.hiddenpeak.erp.dal.production.ProductionData;
 import com.hiddenpeak.erp.repository.PurchaseOrderRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,4 +44,14 @@ public class ProductionManager {
   }
 
 
+  public void updateOrderStatus(int id, String desiredStatus) {
+    // find id with matching order
+    Optional<PurchaseOrder> purchaseOrderOpt = getAllOrders().stream().filter(order -> order.getOrderId().equals(id)).findFirst();
+    if (purchaseOrderOpt.isEmpty()) {
+      return;
+    }
+    PurchaseOrder purchaseOrder = purchaseOrderOpt.get();
+    purchaseOrder.setStatus(desiredStatus);
+    purchaseOrderRepository.save(purchaseOrder);
+  }
 }

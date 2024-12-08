@@ -2,14 +2,19 @@ package com.hiddenpeak.erp.api;
 
 import com.hiddenpeak.erp.AdminManager;
 import com.hiddenpeak.erp.ProductionManager;
+import com.hiddenpeak.erp.dal.PurchaseOrder;
 import com.hiddenpeak.erp.dal.admin.DashboardStats;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,13 +25,31 @@ public class AdminController {
   @Autowired
   AdminManager adminManager;
 
-  List<String> createdUsers = new ArrayList<>();
-
   @GetMapping("/api/dashboard-stats")
   public ResponseEntity getDashboardData() {
     log.info("Retrieving Dashboard Stats");
     return ResponseEntity.ok(adminManager.getDashboardStats());
   }
 
+  @PostMapping("/api/users")
+  public ResponseEntity addUser(@RequestBody String data) {
+    log.info("Adding User");
+    log.info("Data: {}", data);
+
+//    JSONObject object = new JSONObject(data);
+//
+//    int id = Integer.parseInt(object.getString("productId"));
+//    String customerFirstName = object.getString("customerFirstName");
+//    String customerLastName = object.getString("customerLastName");
+//    int cost = Integer.parseInt(object.getString("cost"));
+//    int quantity = Integer.parseInt(object.getString("quantity"));
+//    String date = object.getString("completionDate");
+//    String zip = object.getString("zip");
+//
+//    PurchaseOrder purchaseOrder = new PurchaseOrder(id, customerFirstName + " " + customerLastName, quantity, date, cost, zip);
+//
+//    productionManager.submitOrder(purchaseOrder);
+    return new ResponseEntity(HttpStatus.OK);
+  }
 }
 
