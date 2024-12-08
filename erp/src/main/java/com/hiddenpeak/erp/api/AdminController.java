@@ -44,5 +44,11 @@ public class AdminController {
 
     return new ResponseEntity(HttpStatus.OK);
   }
+
+  @GetMapping("/api/users")
+  public ResponseEntity getUsers() {
+    log.info("Get Users");
+    return ResponseEntity.ok(adminManager.getAllUsers());
+  }
 }
 

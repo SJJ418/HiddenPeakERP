@@ -26,9 +26,9 @@ class AdminDashboard {
 
   initializeDashboard() {
     this.fetchStateBoxes();      
-    this.fetchActivities();      
+    //this.fetchActivities();      
     this.fetchUsers();           
-    this.initializeGraphs();    
+    //this.initializeGraphs();    
   }
 
   initializeEvents() {
@@ -178,11 +178,10 @@ class AdminDashboard {
     this.userTableBody.innerHTML = users.map(user => `
       <tr>
         <td><input type="checkbox" class="user-checkbox"></td>
-        <td>${user.firstName} ${user.lastName}</td>
-        <td>${user.status}</td>
-        <td>${user.department}</td>
-        <td>${user.position}</td>
-        <td>${user.lastLogin}</td>
+        <td>${user.userId}</td>
+        <td>ACTIVE</td>
+        <td>${user.role}</td>
+        <td></td>
       </tr>
     `).join('');
   }

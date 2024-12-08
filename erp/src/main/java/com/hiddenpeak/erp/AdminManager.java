@@ -47,7 +47,7 @@ UserRepository userRepository;
    * Query the database for all Users
    * @return a List of all users in the database
    */
-  private List<User> getAllUsers() {
+  public List<User> getAllUsers() {
     List<User> createdUsers = new ArrayList<>();
     userRepository.findAll().forEach(createdUsers::add);
     return createdUsers;

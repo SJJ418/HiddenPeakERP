@@ -33,9 +33,11 @@ public class ProductionController {
   @PostMapping("/api/orders/process")
   public ResponseEntity processOrders(@RequestBody String data) {
     log.info("Processing Production Order");
+    log.info("data: {}", data);
+
     JSONObject object = new JSONObject(data);
     int id = Integer.parseInt(object.getString("id"));
-    productionManager.updateOrderStatus(id, "IN PROGRESS");
+    productionManager.updateOrderStatus(id, "IN_PROGRESS");
     return new ResponseEntity(HttpStatus.OK);
   }
 
