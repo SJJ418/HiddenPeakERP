@@ -2,39 +2,27 @@ package com.hiddenpeak.erp.entity;
 
 import jakarta.persistence.*;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "user")
 public class User {
+
     @Id
     @Column(name = "userId")
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private String userId;
 
     private String userPassword;
 
-    @OneToOne
-    @JoinColumn(name = "permissionId")
-    private Permission permission;
+    private String role;
 
-    public User(String id, String password, Permission pId) {
-        this.userId = id;
+    public User(String userId, String password, String role) {
+        this.userId = userId;
         this.userPassword = password;
-        this.permission = pId;
+        this.role = role;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String id) {
-        this.userId = id;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String password) {
-        this.userPassword = password;
-    }
 }

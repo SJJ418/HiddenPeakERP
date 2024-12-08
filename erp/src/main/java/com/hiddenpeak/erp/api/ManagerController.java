@@ -4,6 +4,7 @@ import com.hiddenpeak.erp.ProductionManager;
 import com.hiddenpeak.erp.dal.manager.DashboardData;
 import com.hiddenpeak.erp.dal.manager.Inventory;
 import com.hiddenpeak.erp.dal.manager.Order;
+import com.hiddenpeak.erp.entity.PurchaseOrder;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -49,17 +50,17 @@ public class ManagerController {
     String date = object.getString("completionDate");
     String zip = object.getString("zip");
 
-    Order order = new Order(id, customerFirstName + " " + customerLastName, cost, "NEW", quantity, date, zip);
+    PurchaseOrder purchaseOrder = new PurchaseOrder(id, customerFirstName + " " + customerLastName, quantity, date, zip);
+//    Order order = new Order(id, customerFirstName + " " + customerLastName, cost, "PENDING", quantity, date, zip);
 
-    orders.add(order);
-
+    productionManager.submitOrder(purchaseOrder);
     return new ResponseEntity(HttpStatus.OK);
   }
 
   @GetMapping("/api/orders")
   public ResponseEntity getOrders() {
     log.info("Retrieving Orders");
-    return ResponseEntity.ok(orders);
+    return ResponseEntity.ok(productionManager.getOrders());
   }
 
   @PostMapping("/api/addInventory")
@@ -75,7 +76,6 @@ public class ManagerController {
     double cost = Double.parseDouble(object.getString("cost"));
     String vendorName = object.getString("vendorName");
     String inventoryDate = object.getString("inventoryDate");
-
 
     Inventory inventory = new Inventory(id, itemName, quantity, "NEW", category, cost, vendorName, inventoryDate);
 

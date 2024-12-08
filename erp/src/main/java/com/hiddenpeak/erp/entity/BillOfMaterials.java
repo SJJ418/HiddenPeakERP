@@ -9,8 +9,8 @@ import java.util.List;
 @Table(name = "billOfMaterial")
 public class BillOfMaterials {
     @Id
+    @Column(name = "billOfMaterialId")
     @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name = "billOfmMaterialId")
     private Integer billOfMaterialId;
 
     @OneToOne

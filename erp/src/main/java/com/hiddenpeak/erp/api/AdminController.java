@@ -1,5 +1,6 @@
 package com.hiddenpeak.erp.api;
 
+import com.hiddenpeak.erp.AdminManager;
 import com.hiddenpeak.erp.ProductionManager;
 import com.hiddenpeak.erp.dal.admin.DashboardStats;
 import java.util.ArrayList;
@@ -17,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
   @Autowired
-  ProductionManager productionManager;
+  AdminManager adminManager;
 
   List<String> createdUsers = new ArrayList<>();
 
   @GetMapping("/api/dashboard-stats")
   public ResponseEntity getDashboardData() {
     log.info("Retrieving Dashboard Stats");
-    return ResponseEntity.ok(new DashboardStats(1, 2, 3));
+    return ResponseEntity.ok(adminManager.getDashboardStats());
   }
 
 }

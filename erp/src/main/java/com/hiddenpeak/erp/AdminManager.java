@@ -1,11 +1,12 @@
 package com.hiddenpeak.erp;
 
-import com.hiddenpeak.erp.dal.ProductionReport;
-import com.hiddenpeak.erp.dal.login.User;
+import com.hiddenpeak.erp.dal.admin.DashboardStats;
+import com.hiddenpeak.erp.entity.User;
+import com.hiddenpeak.erp.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,15 +15,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class AdminManager {
 
-  @Getter
-  private List<User> createdUsers = new ArrayList<>();
+@Autowired
+UserRepository userRepository;
 
   /**
    * Add a new User
    * @param user
    */
   public void addUser(User user) {
-    createdUsers.add(user);
+    userRepository.save(user);
   }
 
   /**
@@ -32,10 +33,18 @@ public class AdminManager {
    * @return
    */
   public Optional<User> getUser(String userId, String password) {
+    List<User> createdUsers = new ArrayList<>();
+    userRepository.findAll().forEach(createdUsers::add);
     return createdUsers.stream()
         .filter(user ->
-            (user.getUserId().equals(userId) && user.getPassword().equals(password))
+            (user.getUserId().equals(userId) && user.getUserPassword().equals(password))
         ).findFirst();
+  }
+
+  public DashboardStats getDashboardStats() {
+    List<User> createdUsers = new ArrayList<>();
+    userRepository.findAll().forEach(createdUsers::add);
+    return new DashboardStats(createdUsers.size(), 1, createdUsers.size());
   }
 
 }

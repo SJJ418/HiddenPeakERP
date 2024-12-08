@@ -1,12 +1,21 @@
 services:
 
-  erp:
-    image: ghcr.io/stchiang/erp:20241119
+  # erp:
+  #   image: ghcr.io/stchiang/erp:20241119
+  #   ports:
+  #     - 8080:8080
+
+  # erp-frontend:
+  #   image: ghcr.io/stchiang/frontend:20241119
+  #   ports: 
+  #     - 8000:80
+
+  mysql:
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE=mydatabase'
+      - 'MYSQL_PASSWORD=secret'
+      - 'MYSQL_ROOT_PASSWORD=verysecret'
+      - 'MYSQL_USER=myuser'
     ports:
-      - 8080:8080
-
-  erp-frontend:
-    image: ghcr.io/stchiang/frontend:20241119
-    ports: 
-      - 8000:80
-
+      - '3306:3306'

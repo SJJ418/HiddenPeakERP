@@ -1,24 +1,25 @@
 package com.hiddenpeak.erp;
 
-import com.hiddenpeak.erp.dal.ProductionReport;
+import com.hiddenpeak.erp.entity.PurchaseOrder;
+import com.hiddenpeak.erp.repository.PurchaseOrderRepository;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductionManager {
 
-  @Getter private List<ProductionReport> productionReports = new ArrayList<>();
+  @Autowired
+  PurchaseOrderRepository purchaseOrderRepository;
 
-  /**
-   * Generates a ProductionReport for a purchase order
-   *
-   */
-  void generateProductionReport(String purchaseOrder) {
-
-
-
+  public void submitOrder(PurchaseOrder purchaseOrder) {
+    purchaseOrderRepository.save(purchaseOrder);
   }
 
+  public List<PurchaseOrder> getOrders() {
+    List<PurchaseOrder> purchaseOrders = new ArrayList<>();
+    purchaseOrderRepository.findAll().forEach(purchaseOrders::add);
+    return purchaseOrders;
+  }
 }

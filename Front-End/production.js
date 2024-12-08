@@ -158,12 +158,12 @@ class ProductionDashboard {
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td><input type="checkbox" data-id="${order.id}"></td>
-                <td>${order.id}</td>
+                <td>${order.orderId}</td>
                 <td>${order.product}</td>
                 <td>${order.quantity}</td>
                 <td>${order.status}</td>
-                <td>${type === 'production' ? order.startDate : order.shippingDate || "-"}</td>
-                <td>${type === 'production' ? order.estimatedCompletion : order.estimatedArrival || "-"}</td>
+                <td>${type === 'production' ? order.orderDate : order.shippingDate || "-"}</td>
+                <td>${type === 'production' ? order.dueDate : order.estimatedArrival || "-"}</td>
                 <td>${order.priority}</td>
             `;
             tableBody.appendChild(row);

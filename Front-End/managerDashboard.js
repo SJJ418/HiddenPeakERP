@@ -247,13 +247,13 @@ class ManagerDashboard {
         item => `
         <tr>
           <td><input type="checkbox"></td>
-          <td>${item.id || item.itemId}</td>
-          <td>${item.name || item.itemName}</td>
-          <td>${item.quantity || ''}</td>
-          <td>${item.status || ''}</td>
-          <td>${item.category || ''}</td>
+          <td>${item.orderId || item.itemId}</td>
+          <td>${item.customerName || item.itemName}</td>
           <td>${item.cost || ''}</td>
-          <td>${item.vendor || ''}</td>
+          <td>${item.status || ''}</td>
+          <td>${item.quantity || ''}</td>
+          <td>${item.dueDate || ''}</td>
+          <td>${item.zip || ''}</td>
           <td>${item.inventoryDate || ''}</td> <!-- Add this line -->
 
         </tr>`
