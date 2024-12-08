@@ -20,7 +20,7 @@ class ProductionDashboard {
             editOrder: document.getElementById("editOrderModal"),
             delayOrder: document.getElementById("delayOrderModal"),
             cancelOrder: document.getElementById("cancelOrderDialog"),
-            completeOrder: document.getElementById("completeOrderDialog"),
+            completeOrder: document.getElementById("completeOrderModal"),
             shippingLabel: document.getElementById("shippingLabelModal"),
             signOut: document.getElementById("signOutModal")
         };
@@ -301,8 +301,8 @@ getSelectedOrderId(status = null) {
     const checkboxes = Array.from(document.querySelectorAll('#productionTableBody input[type="checkbox"]:checked'));
 
     if (checkboxes.length === 1) {
-        const orderId = checkboxes[0].dataset.id; // Retrieve order ID from data-id attribute
         const orderRow = checkboxes[0].closest("tr"); // Find the associated row
+        const orderId = orderRow.cells[1].textContent.toLowerCase(); // Retrieve order ID from data-id attribute
         const orderStatus = orderRow.cells[4].textContent.trim().toLowerCase(); // Get the status column text
 
         // Validate status if provided

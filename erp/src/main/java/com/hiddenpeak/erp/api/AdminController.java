@@ -3,6 +3,7 @@ package com.hiddenpeak.erp.api;
 import com.hiddenpeak.erp.AdminManager;
 import com.hiddenpeak.erp.ProductionManager;
 import com.hiddenpeak.erp.dal.PurchaseOrder;
+import com.hiddenpeak.erp.dal.User;
 import com.hiddenpeak.erp.dal.admin.DashboardStats;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,21 +35,13 @@ public class AdminController {
   @PostMapping("/api/users")
   public ResponseEntity addUser(@RequestBody String data) {
     log.info("Adding User");
-    log.info("Data: {}", data);
 
-//    JSONObject object = new JSONObject(data);
-//
-//    int id = Integer.parseInt(object.getString("productId"));
-//    String customerFirstName = object.getString("customerFirstName");
-//    String customerLastName = object.getString("customerLastName");
-//    int cost = Integer.parseInt(object.getString("cost"));
-//    int quantity = Integer.parseInt(object.getString("quantity"));
-//    String date = object.getString("completionDate");
-//    String zip = object.getString("zip");
-//
-//    PurchaseOrder purchaseOrder = new PurchaseOrder(id, customerFirstName + " " + customerLastName, quantity, date, cost, zip);
-//
-//    productionManager.submitOrder(purchaseOrder);
+    JSONObject object = new JSONObject(data);
+    String userId = object.getString("userId");
+    String password = object.getString("password");
+    String role = object.getString("position");
+    adminManager.addUser(new User(userId, password, role));
+
     return new ResponseEntity(HttpStatus.OK);
   }
 }
