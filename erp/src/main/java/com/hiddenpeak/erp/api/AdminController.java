@@ -1,12 +1,8 @@
 package com.hiddenpeak.erp.api;
 
 import com.hiddenpeak.erp.AdminManager;
-import com.hiddenpeak.erp.ProductionManager;
-import com.hiddenpeak.erp.dal.PurchaseOrder;
+
 import com.hiddenpeak.erp.dal.User;
-import com.hiddenpeak.erp.dal.admin.DashboardStats;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST API for the adminController.html page
+ */
 @RestController
 @CrossOrigin
 @Slf4j

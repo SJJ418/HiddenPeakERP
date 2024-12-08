@@ -1,6 +1,7 @@
 package com.hiddenpeak.erp;
 
 import ch.qos.logback.classic.Logger;
+import com.hiddenpeak.erp.dal.PurchaseOrder;
 import com.hiddenpeak.erp.dal.User;
 import com.hiddenpeak.erp.repository.PurchaseOrderRepository;
 import com.hiddenpeak.erp.repository.UserRepository;
@@ -42,6 +43,12 @@ public class TestDataController {
   }
 
   private void initializePurchaseOrderTable() {
+    List<PurchaseOrder> orders = new ArrayList<>();
+    orders.add(new PurchaseOrder(1, "Steve Chiang", 10, "2025-01-01", 500, "10000"));
+    orders.add(new PurchaseOrder(2, "Samy Attia", 4, "2025-01-02", 600, "20000"));
+    orders.add(new PurchaseOrder(3, "Stephen Jendritz", 6, "2025-01-03", 700, "30000"));
+    purchaseOrderRepository.saveAll(orders);
+
   }
 
 }
