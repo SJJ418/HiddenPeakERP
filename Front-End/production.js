@@ -207,13 +207,23 @@ populateTable(tableBody, orders) {
 
 // Open a modal for a specific action
 openModal(modalName, status = null) {
+    console.log("Opening modal:", modalName); // Debugging log
+
     this.selectedOrderId = this.getSelectedOrderId(status); // Get the selected order ID
+    const modal = this.modals[modalName]; // Get the modal reference
+
+    if (!modal) { // Check if the modal exists
+        console.error(`Modal "${modalName}" does not exist in this.modals.`);
+        return; // Exit if the modal is not found
+    }
+
     if (this.selectedOrderId) {
-        this.modals[modalName].style.display = "flex"; // Show the modal
+        modal.style.display = "flex"; // Show the modal
     } else {
         alert(`Please select an order with status: ${status || 'any'}.`);
     }
 }
+
 
 
     // Submit order changes based on form type
