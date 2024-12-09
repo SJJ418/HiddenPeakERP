@@ -211,23 +211,13 @@ populateTable(tableBody, orders) {
 
 
 // Open a modal for a specific action
-openModal(modalName, status = null) {
-    console.log("Opening modal:", modalName); // Debugging log
-
-    this.selectedOrderId = this.getSelectedOrderId(status); // Get the selected order ID
-    const modal = this.modals[modalName]; // Get the modal reference
-
-    if (!modal) { // Check if the modal exists
-        console.error(`Modal "${modalName}" does not exist in this.modals.`);
-        return; // Exit if the modal is not found
-    }
-
+openModal(modalName, status = null, tableBodyId = "productionTableBody") {
+    this.selectedOrderId = this.getSelectedOrderId(status, tableBodyId); // Pass the appropriate table body ID
     if (this.selectedOrderId) {
-        modal.style.display = "flex"; // Show the modal
-    } else {
-        alert(`Please select an order with status: ${status || 'any'}.`);
+        this.modals[modalName].style.display = "flex"; // Show the modal
     }
 }
+
 
 
 
@@ -301,31 +291,35 @@ async completeOrder() {
 }
 
 
-// Utility to get the selected order ID with optional status filtering
+// Utility to get selected order ID with optional status filter
 getSelectedOrderId(status = null, tableBodyId = "productionTableBody") {
-    const tableBody = document.getElementById(tableBodyId);
+    const tableBody = document.getElementById(tableBodyId); // Use the passed table body
     const checkboxes = Array.from(tableBody.querySelectorAll('input[type="checkbox"]:checked'));
 
-    if (checkboxes.length === 1) {
-        const orderId = checkboxes[0].dataset.id;
-        const orderRow = checkboxes[0].closest("tr");
-        const orderStatus = orderRow.cells[4].textContent.trim().toLowerCase();
-
-        if (!status || orderStatus === status.toLowerCase()) {
-            return orderId;
-        } else {
-            alert(`Please select an order with status: ${status}.`);
-            return null;
-        }
+    // Check if no checkbox is selected
+    if (checkboxes.length === 0) {
+        alert("Please select an order.");
+        return null; // Exit early if no checkbox is selected
     }
 
+    // Ensure only one checkbox is selected
     if (checkboxes.length > 1) {
         alert("Please select only one order at a time.");
-    } else {
-        alert("Please select an order.");
+        return null; // Exit early if more than one checkbox is selected
     }
 
-    return null;
+    // Validate the selected order's status
+    const selectedCheckbox = checkboxes[0];
+    const orderId = selectedCheckbox.dataset.id; // Get the order ID
+    const orderRow = selectedCheckbox.closest("tr"); // Get the selected row
+    const orderStatus = orderRow.cells[4].textContent.trim().toLowerCase();
+
+    if (status && orderStatus !== status.toLowerCase()) {
+        alert(`Please select an order with status: ${status}.`);
+        return null; // Exit if status does not match
+    }
+
+    return orderId; // Return the valid order ID
 }
 }
 
