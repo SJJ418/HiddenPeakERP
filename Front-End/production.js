@@ -68,7 +68,8 @@ initEvents() {
     this.buttons.shipOrder?.addEventListener("click", () => {
         this.selectedOrderId = this.getSelectedOrderId("completed", "shippingTableBody");
         if (this.selectedOrderId) {
-            this.openModal("shippingLabel", "completed");
+            this.modals["shippingLabel"].style.display = "flex"; // Show the modal
+            //this.openModal("shippingLabel", "completed");
         }
     });
     this.buttons.editShipping?.addEventListener("click", () => this.openModal('editShipping')); // Edit shipping modal
@@ -89,6 +90,12 @@ initEvents() {
     document.querySelector("#completeOrderModal .close")?.addEventListener("click", () => {
         this.modals.completeOrder.style.display = "none"; // Hide modal when close button is clicked
     });
+
+    // Confirm Complete Order action in the modal
+    document.getElementById("printLabelButton")?.addEventListener("click", () => {
+        this.modals.shippingLabel.style.display = "none"; // Hide modal when close button is clicked
+    });
+
 }
 
     // Fetch data from the API
@@ -218,9 +225,6 @@ openModal(modalName, status = null, tableBodyId = "productionTableBody") {
     }
 }
 
-
-
-
     // Submit order changes based on form type
     async submitOrder(event, actionType) {
         event.preventDefault();
@@ -310,8 +314,8 @@ getSelectedOrderId(status = null, tableBodyId = "productionTableBody") {
 
     // Validate the selected order's status
     const selectedCheckbox = checkboxes[0];
-    const orderId = selectedCheckbox.dataset.id; // Get the order ID
     const orderRow = selectedCheckbox.closest("tr"); // Get the selected row
+    const orderId = orderRow.cells[1].textContent.toLowerCase(); // Get the order ID
     const orderStatus = orderRow.cells[4].textContent.trim().toLowerCase();
 
     if (status && orderStatus !== status.toLowerCase()) {
