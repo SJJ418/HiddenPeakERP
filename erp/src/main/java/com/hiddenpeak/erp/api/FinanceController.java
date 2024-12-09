@@ -1,5 +1,6 @@
 package com.hiddenpeak.erp.api;
 
+import com.hiddenpeak.erp.FinanceManager;
 import com.hiddenpeak.erp.ProductionManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class FinanceController {
 
   @Autowired
-  ProductionManager productionManager;
+  FinanceManager financeManager;
 
   @GetMapping("/api/finance-dashboard")
   public ResponseEntity getFinanceData() {
     log.info("Retrieving Finance Data");
-    return ResponseEntity.ok(productionManager.getProductionData());
+    return ResponseEntity.ok(financeManager.getFinanceData());
   }
 
   @GetMapping("/api/invoices")
   public ResponseEntity getInvoices() {
     log.info("Get Invoices");
-    return new ResponseEntity(HttpStatus.OK);
+    return ResponseEntity.ok(financeManager.getAllInvoices());
   }
 
   @GetMapping("/api/payments")

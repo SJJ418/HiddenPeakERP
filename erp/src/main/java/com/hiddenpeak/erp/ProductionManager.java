@@ -1,8 +1,10 @@
 package com.hiddenpeak.erp;
 
+import com.hiddenpeak.erp.dal.Invoice;
 import com.hiddenpeak.erp.dal.PurchaseOrder;
 import com.hiddenpeak.erp.dal.manager.DashboardData;
 import com.hiddenpeak.erp.dal.production.ProductionData;
+import com.hiddenpeak.erp.repository.InvoiceRepository;
 import com.hiddenpeak.erp.repository.PurchaseOrderRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,9 @@ public class ProductionManager {
 
   @Autowired
   PurchaseOrderRepository purchaseOrderRepository;
+
+  @Autowired
+  InvoiceRepository invoiceRepository;
 
   /**
    * Saves a PurchaseOrder to the database
@@ -74,6 +79,12 @@ public class ProductionManager {
     PurchaseOrder purchaseOrder = purchaseOrderOpt.get();
     purchaseOrder.setStatus(desiredStatus);
     purchaseOrderRepository.save(purchaseOrder);
+
+    // if order is flipped to completed, then also generate an invoice for it
+    if (desiredStatus.equals("COMPLETED")) {
+      Invoice invoice = new Invoice(purchaseOrder.getCustomerName(), purchaseOrder.getCost(), purchaseOrder.getDueDate());
+      invoiceRepository.save(invoice);
+    }
   }
 
   /**
