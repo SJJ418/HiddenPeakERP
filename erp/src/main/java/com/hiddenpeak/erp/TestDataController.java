@@ -44,11 +44,10 @@ public class TestDataController {
 
   private void initializePurchaseOrderTable() {
     List<PurchaseOrder> orders = new ArrayList<>();
-    orders.add(new PurchaseOrder(1, "Steve Chiang", 10, "2025-01-01", 500, "10000"));
-    orders.add(new PurchaseOrder(2, "Samy Attia", 4, "2025-01-02", 600, "20000"));
-    orders.add(new PurchaseOrder(3, "Stephen Jendritz", 6, "2025-01-03", 700, "30000"));
+    orders.add(new PurchaseOrder("Wooden Chair", "Steve Chiang", 10, "2025-01-01", 500, "10000"));
+    orders.add(new PurchaseOrder("Wooden Desk", "Samy Attia", 4, "2025-01-02", 600, "20000"));
+    orders.add(new PurchaseOrder("Wooden Bookshelf", "Stephen Jendritz", 6, "2025-01-03", 700, "30000"));
     purchaseOrderRepository.saveAll(orders);
-
   }
 
 }

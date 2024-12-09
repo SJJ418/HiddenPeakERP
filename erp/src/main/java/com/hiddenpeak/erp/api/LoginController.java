@@ -52,7 +52,6 @@ public class LoginController {
       log.info("user found!");
       return ResponseEntity.ok(userOpt.get());
     } else {
-
       log.error("User not found");
       return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }

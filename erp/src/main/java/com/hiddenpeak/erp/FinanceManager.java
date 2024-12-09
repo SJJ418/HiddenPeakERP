@@ -1,14 +1,10 @@
 package com.hiddenpeak.erp;
 
 import com.hiddenpeak.erp.dal.Invoice;
-import com.hiddenpeak.erp.dal.PurchaseOrder;
-import com.hiddenpeak.erp.dal.manager.DashboardData;
-import com.hiddenpeak.erp.dal.production.ProductionData;
+import com.hiddenpeak.erp.dal.finance.FinanceData;
 import com.hiddenpeak.erp.repository.InvoiceRepository;
-import com.hiddenpeak.erp.repository.PurchaseOrderRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,10 +31,10 @@ public class FinanceManager {
 
   /**
    * Get the finance data statistics
-   * @return a DashboardData object containing finance statistics
+   * @return a FinanceData object containing finance statistics
    */
-  public DashboardData getFinanceData() {
-    return new DashboardData(getAllInvoices().size(), 0, 0);
+  public FinanceData getFinanceData() {
+    return new FinanceData(getAllInvoices().size(), 0, 0);
   }
 
 }

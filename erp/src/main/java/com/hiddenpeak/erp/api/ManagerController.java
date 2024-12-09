@@ -41,7 +41,7 @@ public class ManagerController {
 
     JSONObject object = new JSONObject(data);
 
-    int id = Integer.parseInt(object.getString("productId"));
+    String productName = object.getString("productId");
     String customerFirstName = object.getString("customerFirstName");
     String customerLastName = object.getString("customerLastName");
     int cost = Integer.parseInt(object.getString("cost"));
@@ -49,7 +49,7 @@ public class ManagerController {
     String date = object.getString("completionDate");
     String zip = object.getString("zip");
 
-    PurchaseOrder purchaseOrder = new PurchaseOrder(id, customerFirstName + " " + customerLastName, quantity, date, cost, zip);
+    PurchaseOrder purchaseOrder = new PurchaseOrder(productName, customerFirstName + " " + customerLastName, quantity, date, cost, zip);
 
     productionManager.submitOrder(purchaseOrder);
     return new ResponseEntity(HttpStatus.OK);

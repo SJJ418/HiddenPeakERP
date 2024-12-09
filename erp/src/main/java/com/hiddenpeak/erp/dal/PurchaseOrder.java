@@ -14,7 +14,10 @@ import lombok.NoArgsConstructor;
 public class PurchaseOrder {
     @Id
     @Column(name = "orderId")
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer orderId;
+
+    private String productName;
 
     private String customerName;
 
@@ -30,8 +33,8 @@ public class PurchaseOrder {
 
     String zip;
 
-    public PurchaseOrder(Integer id, String customerName, Integer quantity, String completionDate, Integer cost, String zip) {
-        this.orderId = id;
+    public PurchaseOrder(String productName, String customerName, Integer quantity, String completionDate, Integer cost, String zip) {
+        this.productName = productName;
         this.customerName = customerName;
         this.quantity = quantity;
         this.dueDate = completionDate;
