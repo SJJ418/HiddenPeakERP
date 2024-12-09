@@ -52,7 +52,7 @@
         <div class="orders-summary">
           <h4>Orders Summary</h4>
           <ul id="summaryList">
-            
+
           </ul>
         </div>
         <div class="snapshot">
@@ -83,7 +83,7 @@
           <button id="cancelSignOut" class="outModal-btn-cancel">Cancel</button>
         </div>
       </div>
-    </div>    
+    </div>
 
     <!-- Orders Section -->
     <div class="orders-section" id="ordersSection" style="display: none;">
@@ -110,12 +110,13 @@
           <option value="status">Status</option>
         </select>
       </div>
-      
+
       <table class="order-table">
         <thead>
           <tr>
             <th><input type="checkbox" id="selectAll"></th>
             <th>Order ID</th>
+            <th>Product Name</th>
             <th>Customer</th>
             <th>Total</th>
             <th>Status</th>
@@ -193,8 +194,8 @@
       <!-- Tab Content: Product Details -->
       <div class="tab-content" id="productDetails" style="display: none;">
         <div class="form-group">
-          <label for="productId">Product ID</label>
-          <input type="text" id="productId" name="productId" placeholder="Enter Product ID" required />
+          <label for="productId">Product Name</label>
+          <input type="text" id="productId" name="productId" placeholder="Enter Product Name" required />
         </div>
         <div class="form-group">
           <label for="quantity">Quantity</label>

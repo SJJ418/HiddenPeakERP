@@ -248,6 +248,7 @@ class ManagerDashboard {
         <tr>
           <td><input type="checkbox"></td>
           <td>${item.orderId || item.itemId}</td>
+          <td>${item.productName || ''}</td>
           <td>${item.customerName || item.itemName}</td>
           <td>${item.cost || ''}</td>
           <td>${item.status || ''}</td>

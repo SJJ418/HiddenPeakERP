@@ -85,7 +85,7 @@ class ModalManager {
                this.showAlert('Account created successfully!', false);  // Show success message
                 this.createAccountModal.style.display = 'none';  // Hide create account modal
                 this.createAccountForm.reset();  // Reset the form
-                this.loginModal.style.display = 'block';  // Show login modal             
+                this.loginModal.style.display = 'block';  // Show login modal
             } else {
                 this.showAlert('Error creating account: ' + data.message);  // Show error message
             }
@@ -113,13 +113,24 @@ class ModalManager {
             },
             body: JSON.stringify(data)  // Send login data as JSON
         })
-       .then(response => {
-            if (response.status == 200) {
-               this.showAlert('Login successful!', false);  // Show success message
-                this.redirectUser(data.role);  // Redirect the user based on their role
+        .then(response => {
+            // Check if the request was successful
+            if (!response.ok) {
+                this.showAlert('Unable to sign in. Please check your credentials and try again.');  // Show error message
             } else {
-                this.showAlert('Error signing in: ' + data.message);  // Show error message
+                // Parse the response body based on the content type
+                if (response.headers.get('Content-Type').includes('application/json')) {
+                    return response.json(); // Parse as JSON
+                } else if (response.headers.get('Content-Type').includes('text/plain')) {
+                    return response.text(); // Parse as plain text
+                } else {
+                    // Handle other content types or throw an error
+                    throw new Error('Unsupported content type');
+                }
             }
+          })
+        .then(data => {
+            this.redirectUser(data.role);  // Redirect the user based on their role
         })
         .catch(error => {
             console.error('Error:', error);  // Log any error
@@ -152,7 +163,7 @@ class ModalManager {
         this.customAlert.classList.remove('hidden');  // Make the alert visible
         this.customAlert.style.display = 'flex';  // Display the alert
         this.customAlert.style.opacity = 1;  // Set alert opacity
-       
+
         // Hide the alert after 3 seconds
         setTimeout(() => this.hideAlert(), 3000);
     }

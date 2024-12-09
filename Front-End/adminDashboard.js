@@ -21,14 +21,14 @@ class AdminDashboard {
     this.signOutButton = document.getElementById('signOut');
 
     this.initializeEvents();
-    this.initializeDashboard(); 
+    this.initializeDashboard();
   }
 
   initializeDashboard() {
-    this.fetchStateBoxes();      
-    //this.fetchActivities();      
-    this.fetchUsers();           
-    //this.initializeGraphs();    
+    this.fetchStateBoxes();
+    //this.fetchActivities();
+    this.fetchUsers();
+    //this.initializeGraphs();
   }
 
   initializeEvents() {
@@ -181,7 +181,7 @@ class AdminDashboard {
         <td>${user.userId}</td>
         <td>ACTIVE</td>
         <td>${user.role}</td>
-        <td></td>
+        <td>Today</td>
       </tr>
     `).join('');
   }
@@ -199,18 +199,18 @@ class AdminDashboard {
     const closeModal = modal.querySelector('.outModal-close');
     const confirmButton = document.getElementById('confirmSignOut');
     const cancelButton = document.getElementById('cancelSignOut');
-  
+
     console.log("Sign-out modal opened"); // Debugging line
     modal.style.display = 'flex';
-  
+
     cancelButton.addEventListener('click', () => {
       modal.style.display = 'none';
       console.log("Sign-out modal closed");
     });
     closeModal.addEventListener('click', () => modal.style.display = 'none');
-  
+
     confirmButton.addEventListener('click', () => window.location.href = 'welcome.html');
-  
+
     window.addEventListener('click', (event) => {
       if (event.target === modal) {
         modal.style.display = 'none';

@@ -152,33 +152,33 @@ initEvents() {
         const closeModal = modal.querySelector(".outModal-close");
         const confirmButton = document.getElementById("confirmSignOut");
         const cancelButton = document.getElementById("cancelSignOut");
-    
+
         if (modal) {
             modal.style.display = "flex"; // Open the modal
         }
-    
+
         // Close modal when cancel button is clicked
         cancelButton?.addEventListener("click", () => {
             modal.style.display = "none";
         });
-    
+
         // Close modal when close icon (×) is clicked
         closeModal?.addEventListener("click", () => {
             modal.style.display = "none";
         });
-    
+
         // Redirect when confirming sign-out
         confirmButton?.addEventListener("click", () => {
             window.location.href = "welcome.html";
         });
-    
+
         // Close modal when clicking outside the modal content
         window.addEventListener("click", (event) => {
             if (event.target === modal) {
                 modal.style.display = "none";
             }
         });
-    }    
+    }
 
     // Load data for production or shipping tables
     async loadTableData(type) {
@@ -206,12 +206,12 @@ populateTable(tableBody, orders) {
         row.innerHTML = `
             <td><input type="checkbox" data-id="${order.id}"></td>
             <td>${order.orderId}</td>
-            <td>${order.product}</td>
+            <td>${order.productName}</td>
             <td>${order.quantity}</td>
             <td>${order.status}</td>
             <td>${order.orderDate || "-"}</td>
             <td>${order.dueDate || "-"}</td>
-            <td>${order.priority}</td>
+            <td>Medium</td>
         `;
         tableBody.appendChild(row); // Add the row to the table
     });
@@ -261,12 +261,12 @@ openModal(modalName, status = null, tableBodyId = "productionTableBody") {
         // Proceed with fetch if selectedOrderId is valid
         try {
             const response = await fetch(`${this.apiUrl}/orders/track/${this.selectedOrderId}`);
-            
+
         } catch (error) {
             console.error("Error fetching tracking information:", error);
         }
     }
-    
+
 
 // Complete a selected order
 async completeOrder() {
