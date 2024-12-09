@@ -307,6 +307,32 @@
       </div>
     </div>
 
+    <!-- Shipping Label Modal -->
+<div id="shippingLabelModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 class="modal-title">Shipping Label</h2>
+    <div id="shippingLabelContent">
+      <p><strong>Company Name:</strong> [Your Company Name]</p>
+      <p><strong>Company Address:</strong> [Company Address]</p>
+      <hr>
+      <p><strong>Recipient Name:</strong> <span id="recipientName"></span></p>
+      <p><strong>Shipping Address:</strong> <span id="shippingAddress"></span></p>
+      <p><strong>Order ID:</strong> <span id="orderId"></span></p>
+      <p><strong>Product:</strong> <span id="product"></span></p>
+      <p><strong>Quantity:</strong> <span id="quantity"></span></p>
+      <div id="barcodeContainer">
+        <img id="barcodeImage" src="" alt="Barcode">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button id="printLabelButton" class="btn-primary">Print Label</button>
+      <button type="button" class="btn-cancel close">Close</button>
+    </div>
+  </div>
+</div>
+
+
     <!-- Cancel Shipping Modal -->
     <div id="cancelShippingModal" class="modal">
       <div class="modal-content">
