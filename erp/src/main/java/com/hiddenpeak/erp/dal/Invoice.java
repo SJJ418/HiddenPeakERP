@@ -35,7 +35,7 @@ public class Invoice {
         this.dueDate = dueDate;
 
         // initial invoice status is PENDING
-        this.status = "PENDING";
+        this.status = "AWAITING PAYMENT";
     }
 }
 

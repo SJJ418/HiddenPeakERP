@@ -178,9 +178,6 @@ class FinanceDashboard {
               <td>${item.amount}</td>
               <td>${item.status}</td>
               <td>${item.dueDate}</td>
-              <td>
-                <button class="btn-secondary download-btn" data-id="${item.invoiceId}">Action</button>
-              </td>
             </tr>`
         )
         .join('');
