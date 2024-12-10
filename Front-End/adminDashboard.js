@@ -72,22 +72,6 @@ class AdminDashboard {
 
   // ====================== BACK-END API CALLS ====================== //
 
-  // Fetch dashboard stats (e.g., total orders, out-of-stock items)
-  async fetchStateBoxes() {
-    try {
-      const response = await fetch(`${this.apiUrl}/dashboard-stats`);
-      if (!response.ok) throw new Error('Failed to fetch state boxes');
-      const data = await response.json();
-
-      // Update UI with fetched data
-      document.getElementById('users').querySelector('h1').innerText = data.users;
-      document.getElementById('activeUsers').querySelector('h1').innerText = data.activeUsers;
-      document.getElementById('departments').querySelector('h1').innerText = data.departments;
-    } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
-    }
-  }
-
   // Fetch and display recent activities
   async fetchActivities() {
     try {
@@ -103,73 +87,125 @@ class AdminDashboard {
     }
   }
 
-  // Fetch and display user data
-  async fetchUsers() {
-    try {
-      const response = await fetch(`${this.apiUrl}/users`);
-      if (!response.ok) throw new Error('Failed to fetch users');
-      const users = await response.json();
-      this.renderUserTable(users); // Populate the user table in the UI
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    }
+// Update stats boxes dynamically
+updateStatsBoxes(stats) {
+  // Safely update stats boxes if data exists
+  if (stats.users !== undefined) {
+    document.getElementById('users').querySelector('h1').innerText = stats.users;
   }
+  if (stats.activeUsers !== undefined) {
+    document.getElementById('activeUsers').querySelector('h1').innerText = stats.activeUsers;
+  }
+  if (stats.departments !== undefined) {
+    document.getElementById('departments').querySelector('h1').innerText = stats.departments;
+  }
+}
 
-  // Add new user (via form submission)
-  async handleAddUser(event) {
-    event.preventDefault();
-    const formData = new FormData(this.addUserForm);
+// Fetch dashboard stats (e.g., total orders, out-of-stock items)
+async fetchStateBoxes() {
+  try {
+    const response = await fetch(`${this.apiUrl}/dashboard-stats`);
+    if (!response.ok) throw new Error('Failed to fetch state boxes');
+    const data = await response.json();
+    this.updateStatsBoxes(data); // Use the reusable method
+  } catch (error) {
+    console.error('Error fetching dashboard stats:', error);
+  }
+}
 
-    try {
-      const response = await fetch(`${this.apiUrl}/users`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(formData))
+// Add user and update the table and stats without refreshing
+async handleAddUser(event) {
+  event.preventDefault();
+  const formData = new FormData(this.addUserForm);
+
+  try {
+    const response = await fetch(`${this.apiUrl}/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(formData))
+    });
+
+    if (response.ok) {
+      const newUser = await response.json(); // Get the newly added user from the API response
+      this.addUserToTable(newUser); // Add the user to the table dynamically
+
+      // Update the stats dynamically (e.g., increment users and activeUsers count)
+      this.updateStatsBoxes({
+        users: parseInt(document.getElementById('users').querySelector('h1').innerText) + 1,
+        activeUsers: parseInt(document.getElementById('activeUsers').querySelector('h1').innerText) + 1 // Assuming the new user is active
       });
 
-      if (response.ok) {
-        alert('User added successfully');
-        this.fetchUsers(); // Refresh the user list
-        this.toggleModal(false); // Close the modal
-        this.addUserForm.reset(); // Reset the form
-      } else {
-        const errorMsg = await response.json();
-        alert(`Error adding user: ${errorMsg.message}`);
-      }
-    } catch (error) {
-      console.error('Error adding user:', error);
-      alert('Network error. Please try again later.');
+      this.addUserForm.reset(); // Reset the form
+      this.toggleModal(false); // Close the modal
+      alert('User added successfully');
+      
+      // Optional: Refresh the stats from the server to ensure consistency
+      this.fetchStateBoxes();
+    } else {
+      const errorMsg = await response.json();
+      alert(`Error adding user: ${errorMsg.message}`);
     }
+  } catch (error) {
+    console.error('Error adding user:', error);
+    alert('Network error. Please try again later.');
   }
+}
 
-  // Save user and allow adding another one (modal remains open)
-  async saveAndAddAnother(event) {
-    event.preventDefault();
-    const formData = new FormData(this.addUserForm);
+// Add user dynamically to the table
+addUserToTable(user) {
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+    <td><input type="checkbox" class="user-checkbox"></td>
+    <td>${user.userId}</td>
+    <td>${user.status || 'ACTIVE'}</td> <!-- Default to ACTIVE if not provided -->
+    <td>${user.role || 'N/A'}</td> <!-- Default to N/A if role is not provided -->
+    <td>${user.lastLogin || 'Today'}</td> <!-- Default to Today if not provided -->
+  `;
+  this.userTableBody.appendChild(newRow);
+}
 
-    try {
-      const response = await fetch(`${this.apiUrl}/users`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(formData))
-      });
+// Save and add another user without reloading the page
+async saveAndAddAnother(event) {
+  event.preventDefault();
+  const formData = new FormData(this.addUserForm);
 
-      if (response.ok) {
-        alert('User added successfully');
-        this.fetchUsers(); // Refresh the user list
-        this.addUserForm.reset(); // Reset form but keep modal open
-      } else {
-        const errorMsg = await response.json();
-        alert(`Error adding user: ${errorMsg.message}`);
-      }
-    } catch (error) {
-      console.error('Error adding user:', error);
-      alert('Network error. Please try again later.');
+  try {
+    const response = await fetch(`${this.apiUrl}/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(formData))
+    });
+
+    if (response.ok) {
+      const newUser = await response.json(); // Get the newly added user from the API response
+      this.addUserToTable(newUser); // Add the user to the table dynamically
+      this.addUserForm.reset(); // Reset the form but keep the modal open
+      alert('User added successfully');
+      
+      // Optional: Refresh the stats from the server to ensure consistency
+      this.fetchStateBoxes();
+    } else {
+      const errorMsg = await response.json();
+      alert(`Error adding user: ${errorMsg.message}`);
     }
+  } catch (error) {
+    console.error('Error adding user:', error);
+    alert('Network error. Please try again later.');
   }
+}
 
+// Fetch and display user data
+async fetchUsers() {
+  try {
+    const response = await fetch(`${this.apiUrl}/users`);
+    if (!response.ok) throw new Error('Failed to fetch users');
+    const users = await response.json();
+    this.renderUserTable(users); // Populate the user table in the UI
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+}
   // ====================== END BACK-END API CALLS ====================== //
-
 
   // ====================== FRONT-END UI UPDATES ====================== //
 
