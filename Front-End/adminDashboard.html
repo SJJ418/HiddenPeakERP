@@ -85,43 +85,56 @@
         <div class="modal-content">
           <span class="close">&times;</span>
           <h2 class="modal-title">Add New User</h2>
-            <form id="addUserForm">
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="firstName">First Name</label>
-                  <input type="text" id="firstName" name="firstName" placeholder="Enter first name" required />
-                </div>
-                <div class="form-group">
-                  <label for="lastName">Last Name</label>
-                  <input type="text" id="lastName" name="lastName" placeholder="Enter last name" required />
-                </div>
+          <form id="addUserForm">
+            <!-- First Row -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" placeholder="Enter first name" required />
               </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="position">Position</label>
-                  <input type="text" id="position" name="position" placeholder="Enter position" required />
-                </div>
-                <div class="form-group">
-                  <label for="department">Department</label>
-                  <input type="text" id="department" name="department" placeholder="Enter department" required />
-                </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Enter last name" required />
               </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="userId">User ID</label>
-                  <input type="text" id="userId" name="userId" placeholder="Enter user ID" required />
-                </div>
-                <div class="form-group">
-                  <label for="password">Password</label>
-                  <input type="password" id="password" name="password" placeholder="Enter password" required />
-                </div>
+            </div>
+            
+            <!-- Second Row -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="position">Position</label>
+                <select id="position" name="position" required>
+                  <option value="" disabled selected>Choose Position</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Ops Manager">Ops Manager</option>
+                  <option value="Production Mgr">Production Mgr</option>
+                  <option value="Finance">Finance</option>
+                </select>
               </div>
-              <div class="modal-actions">
-                <button type="submit" class="btn-primary">Save</button>
-                <button type="button" id="saveAndAddAnother" class="btn-secondary">Save & Add Another</button>
-                <button type="button" class="btn-cancel">Cancel</button>
+              <div class="form-group">
+                <label for="department">Department</label>
+                <input type="text" id="department" name="department" placeholder="Enter department" required />
               </div>
-            </form>
+            </div>
+            
+            <!-- Third Row -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="userId">User ID</label>
+                <input type="text" id="userId" name="userId" placeholder="Enter user ID" required />
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" required />
+              </div>
+            </div>
+            
+            <!-- Modal Actions -->
+            <div class="modal-actions">
+              <button type="submit" class="btn-primary">Save</button>
+              <button type="button" id="saveAndAddAnother" class="btn-secondary">Save & Add Another</button>
+              <button type="button" class="btn-cancel">Cancel</button>
+            </div>
+          </form>
         </div>
       </div>
 
