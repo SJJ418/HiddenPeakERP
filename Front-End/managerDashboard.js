@@ -21,6 +21,7 @@ class ManagerDashboard {
     this.vendorDropdown = document.getElementById('vendorName');
     this.newVendorField = document.getElementById('newVendorField');
     this.signOutButton = document.getElementById('signOut');
+    this.initializeFilters();
   }
 
   // Initialize event listeners
@@ -184,97 +185,243 @@ class ManagerDashboard {
     this.vendorDropdown.value = vendorName;
   }
 
-  // ====================== BACK-END API CALLS ====================== //
+// ====================== BACK-END API CALLS ====================== //
 
-  // Handle form submission
-  async submitForm(formId, modal) {
-    const formData = new FormData(document.getElementById(formId));
-    const data = Object.fromEntries(formData.entries());
+// Dynamically update stats box
+updateStatsBoxes(stats) {
+  if (stats.orders !== undefined) {
+    document.getElementById('totalOrders').querySelector('h1').innerText = stats.orders;
+  }
+  if (stats.outOfStock !== undefined) {
+    document.getElementById('outofStock').querySelector('h1').innerText = stats.outOfStock;
+  }
+  if (stats.ordersShipped !== undefined) {
+    document.getElementById('ordersShipped').querySelector('h1').innerText = stats.ordersShipped;
+  }
+}
 
-    const newVendorName = document.getElementById('newVendorName').value.trim();
-    if (newVendorName) this.addVendorToDropdown(newVendorName);
+// Add new order to the table dynamically
+addOrderToTable(order) {
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+    <td><input type="checkbox"></td>
+    <td>${order.orderId}</td>
+    <td>${order.customerName}</td>
+    <td>${order.cost || ''}</td>
+    <td>${order.status || 'Pending'}</td>
+    <td>${order.quantity || ''}</td>
+    <td>${order.dueDate || ''}</td>
+    <td>${order.zip || ''}</td>
+  `;
+  this.orderTableBody.appendChild(newRow);
+}
 
-    try {
-      const response = await fetch(`${this.apiUrl}/${formId.split('Form')[0]}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
+// Add new inventory item to the table dynamically
+addInventoryToTable(inventory) {
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+    <td><input type="checkbox"></td>
+    <td>${inventory.itemId}</td>
+    <td>${inventory.itemName}</td>
+    <td>${inventory.cost || ''}</td>
+    <td>${inventory.status || ''}</td>
+    <td>${inventory.quantity || ''}</td>
+    <td>${inventory.inventoryDate || ''}</td>
+  `;
+  this.inventoryTableBody.appendChild(newRow);
+}
 
-      if (response.ok) {
-        alert('Saved successfully!');
-        this.closeModal(modal);
-        this.loadInitialData();
-      } else {
-        const error = await response.json();
-        alert(`Error: ${error.message}`);
+// Handle form submission for orders and inventory
+async submitForm(formId, modal) {
+  const formData = new FormData(document.getElementById(formId));
+  const data = Object.fromEntries(formData.entries());
+
+  const newVendorName = document.getElementById('newVendorName').value.trim();
+  if (newVendorName) this.addVendorToDropdown(newVendorName);
+
+  try {
+    const response = await fetch(`${this.apiUrl}/${formId.split('Form')[0]}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      const savedData = await response.json();
+      alert('Saved successfully!');
+
+      if (formId === 'addOrderForm') {
+        // Add the new order to the table dynamically
+        this.addOrderToTable(savedData);
+
+        // Update stats dynamically
+        this.updateStatsBoxes({
+          orders: parseInt(document.getElementById('totalOrders').querySelector('h1').innerText) + 1,
+        });
+      } else if (formId === 'addInventoryForm') {
+        // Add the new inventory item to the table dynamically
+        this.addInventoryToTable(savedData);
+
+        // Update stats dynamically (e.g., out-of-stock count)
+        this.updateStatsBoxes({
+          outOfStock: parseInt(document.getElementById('outofStock').querySelector('h1').innerText) + 1,
+        });
       }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('Network error. Please try again.');
+
+      this.closeModal(modal);
+
+      // Optionally refresh stats from the server for consistency
+      this.fetchDashboardData();
+    } else {
+      const error = await response.json();
+      alert(`Error: ${error.message}`);
     }
+  } catch (error) {
+    console.error('Error submitting form:', error);
+    alert('Network error. Please try again.');
   }
+}
 
-  // Fetch and display dashboard data
-  async fetchDashboardData() {
-    const data = await this.fetchData('/dashboard-data');
-    if (data) this.updateDashboard(data);
+// Fetch and display dashboard data
+async fetchDashboardData() {
+  const data = await this.fetchData('/dashboard-data');
+  if (data) this.updateStatsBoxes(data);
+}
+
+// Fetch orders and populate the table
+async fetchOrders() {
+  const orders = await this.fetchData('/orders');
+  if (orders) this.populateTable(orders, this.orderTableBody);
+}
+
+// Fetch inventory and populate the table
+async fetchInventory() {
+  const inventory = await this.fetchData('/inventory');
+  if (inventory) this.populateTable(inventory, this.inventoryTableBody);
+}
+
+// Populate table with data
+populateTable(data, tableBody) {
+  tableBody.innerHTML = data
+    .map(
+      item => `
+      <tr>
+        <td><input type="checkbox"></td>
+        <td>${item.orderId || item.itemId}</td>
+        <td>${item.customerName || item.itemName}</td>
+        <td>${item.cost || ''}</td>
+        <td>${item.status || ''}</td>
+        <td>${item.quantity || ''}</td>
+        <td>${item.dueDate || item.inventoryDate || ''}</td>
+      </tr>`
+    )
+    .join('');
+}
+
+// Fetch data from the API
+async fetchData(endpoint) {
+  try {
+    const response = await fetch(`${this.apiUrl}${endpoint}`);
+    if (!response.ok) throw new Error(`Failed to fetch from ${endpoint}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return null;
   }
+}
 
-  // Update dashboard with data
-  updateDashboard(data) {
-    document.getElementById('totalOrders').querySelector('h1').innerText = data.orders;
-    document.getElementById('outofStock').querySelector('h1').innerText = data.outOfStock;
-    document.getElementById('ordersShipped').querySelector('h1').innerText = data.ordersShipped;
-  }
+// ====================== END BACK-END API CALLS ====================== //
 
-  // Fetch orders and populate the table
-  async fetchOrders() {
-    const orders = await this.fetchData('/orders');
-    if (orders) this.populateTable(orders, this.orderTableBody);
-  }
+// Filtering and sorting logic for orders and inventory
+applyFilters() {
+  this.filterOrders();    // Apply filters to the order table
+  this.filterInventory(); // Apply filters to the inventory table
+}
 
-  // Fetch inventory and populate the table
-  async fetchInventory() {
-    const inventory = await this.fetchData('/inventory');
-    if (inventory) this.populateTable(inventory, this.inventoryTableBody);
-  }
+// Filter and sort orders
+filterOrders() {
+  const searchText = document.getElementById('searchInput').value.toLowerCase(); // Search input
+  const status = document.getElementById('statusFilter').value;                 // Status filter
+  const sortBy = document.getElementById('sorting').value;                      // Sorting dropdown
 
-  // Populate table with data
-  populateTable(data, tableBody) {
-    tableBody.innerHTML = data
-      .map(
-        item => `
-        <tr>
-          <td><input type="checkbox"></td>
-          <td>${item.orderId || item.itemId}</td>
-          <td>${item.productName || ''}</td>
-          <td>${item.customerName || item.itemName}</td>
-          <td>${item.cost || ''}</td>
-          <td>${item.status || ''}</td>
-          <td>${item.quantity || ''}</td>
-          <td>${item.dueDate || ''}</td>
-          <td>${item.zip || ''}</td>
-          <td>${item.inventoryDate || ''}</td> <!-- Add this line -->
+  // Get all rows from the orders table
+  const rows = Array.from(this.orderTableBody.children);
 
-        </tr>`
-      )
-      .join('');
-  }
+  // Filter rows based on search text and status
+  const filteredRows = rows.filter(row => {
+    const [orderIdCell, customerCell, , statusCell] = row.cells; // Relevant cells for filtering
+    const matchesSearch = customerCell.innerText.toLowerCase().includes(searchText);
+    const matchesStatus = !status || statusCell.innerText.toLowerCase() === status.toLowerCase();
+    return matchesSearch && matchesStatus;
+  });
 
-  // Fetch data from the API
-  async fetchData(endpoint) {
-    try {
-      const response = await fetch(`${this.apiUrl}${endpoint}`);
-      if (!response.ok) throw new Error(`Failed to fetch from ${endpoint}`);
-      return await response.json();
-    } catch (error) {
-      console.error('Fetch error:', error);
-      return null;
+  // Sort rows based on the selected sort option
+  filteredRows.sort((a, b) => {
+    switch (sortBy) {
+      case 'date':
+        return new Date(a.cells[6].innerText) - new Date(b.cells[6].innerText); // Compare dates
+      case 'customer':
+        return a.cells[1].innerText.localeCompare(b.cells[1].innerText);        // Compare customer names
+      case 'status':
+        return a.cells[4].innerText.localeCompare(b.cells[4].innerText);        // Compare statuses
+      default:
+        return 0; // No sorting
     }
-  }
+  });
 
-  // ====================== END BACK-END API CALLS ====================== //
+  // Clear and re-populate the table with filtered and sorted rows
+  this.orderTableBody.innerHTML = '';
+  filteredRows.forEach(row => this.orderTableBody.appendChild(row));
+}
+
+// Filter and sort inventory
+filterInventory() {
+  const searchText = document.getElementById('inventorySearchInput').value.toLowerCase(); // Search input
+  const status = document.getElementById('inventoryStatusFilter').value;                  // Status filter
+  const sortBy = document.getElementById('inventorySorting').value;                       // Sorting dropdown
+
+  // Get all rows from the inventory table
+  const rows = Array.from(this.inventoryTableBody.children);
+
+  // Filter rows based on search text and status
+  const filteredRows = rows.filter(row => {
+    const [itemIdCell, itemNameCell, , statusCell] = row.cells; // Relevant cells for filtering
+    const matchesSearch = itemNameCell.innerText.toLowerCase().includes(searchText);
+    const matchesStatus = !status || statusCell.innerText.toLowerCase() === status.toLowerCase();
+    return matchesSearch && matchesStatus;
+  });
+
+  // Sort rows based on the selected sort option
+  filteredRows.sort((a, b) => {
+    switch (sortBy) {
+      case 'quantity':
+        return parseInt(a.cells[2].innerText, 10) - parseInt(b.cells[2].innerText, 10); // Compare quantities
+      case 'category':
+        return a.cells[5].innerText.localeCompare(b.cells[5].innerText);                // Compare categories
+      case 'vendor':
+        return a.cells[6].innerText.localeCompare(b.cells[6].innerText);                // Compare vendors
+      default:
+        return 0; // No sorting
+    }
+  });
+
+  // Clear and re-populate the table with filtered and sorted rows
+  this.inventoryTableBody.innerHTML = '';
+  filteredRows.forEach(row => this.inventoryTableBody.appendChild(row));
+}
+
+// Initialize filtering and sorting
+initializeFilters() {
+  // Orders filtering
+  document.getElementById('searchInput').addEventListener('input', () => this.applyFilters());
+  document.getElementById('statusFilter').addEventListener('change', () => this.applyFilters());
+  document.getElementById('sorting').addEventListener('change', () => this.applyFilters());
+
+  // Inventory filtering
+  document.getElementById('inventorySearchInput').addEventListener('input', () => this.applyFilters());
+  document.getElementById('inventoryStatusFilter').addEventListener('change', () => this.applyFilters());
+  document.getElementById('inventorySorting').addEventListener('change', () => this.applyFilters());
+}
 
   // Setup search functionality
   setupSearch(inputId, tableBody) {
